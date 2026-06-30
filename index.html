@@ -97,8 +97,10 @@ td:not(:first-child){text-align:right;font-family:'DM Mono',monospace;}
 
 <div class="nav-wrap">
   <button class="nav-tab active" id="nav-kpi" onclick="goPage('kpi')">📊 KPI 달성 현황</button>
-  <button class="nav-tab" id="nav-camp" onclick="goPage('camp')">🗂 월별 캠페인 현황</button>
+  <button class="nav-tab" id="nav-biz" onclick="goPage('biz')">📋 미디어사업팀</button>
+  <button class="nav-tab" id="nav-mkt" onclick="goPage('mkt')">📋 미디어마케팅팀</button>
   <button class="nav-tab" id="nav-agency" onclick="goPage('agency')">🏢 대행사별 매출 추이</button>
+  <button class="nav-tab" id="nav-camp" onclick="goPage('camp')">🗂 월별 캠페인 현황</button>
 </div>
 
 <!-- KPI 페이지 -->
@@ -189,6 +191,143 @@ td:not(:first-child){text-align:right;font-family:'DM Mono',monospace;}
 </table></div>
 
 </div><!-- /page-kpi -->
+
+
+<!-- 미디어사업팀 페이지 -->
+<div id="page-biz" class="page">
+  <p style="font-size:12px;color:var(--ts);margin-bottom:1rem;">미디어사업팀 KPI 달성 현황 — 비즈링 · 들리Go · 문자&B2G · 옥외광고 · SKT용역</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-card" style="--accent:#2563eb;">
+      <div class="kl">취급고 KPI (상반기)</div>
+      <div class="kv" style="color:#2563eb;">1,748,000,000</div>
+      <div class="ks">연간 4,004,000,000</div>
+    </div>
+    <div class="kpi-card" style="--accent:#d97706;">
+      <div class="kl">매출 KPI (상반기)</div>
+      <div class="kv" style="color:#d97706;">884,940,000</div>
+      <div class="ks">연간 1,846,080,000</div>
+    </div>
+    <div class="kpi-card" style="--accent:#0c9e6e;">
+      <div class="kl">취급고 달성률 (1~6월)</div>
+      <div class="kv" style="color:#0c9e6e;">92.5%</div>
+      <div class="ks">1,616,180,000 / KPI 1,748,000,000</div>
+    </div>
+    <div class="kpi-card" style="--accent:#d97706;">
+      <div class="kl">매출 달성률 (1~6월)</div>
+      <div class="kv" style="color:#d97706;">91.0%</div>
+      <div class="ks">805,180,000 / KPI 884,940,000</div>
+    </div>
+  </div>
+
+  <div class="sec-lbl">월별 취급고 · 매출 KPI vs 실적</div>
+  <div style="display:flex;gap:6px;margin-bottom:.8rem;">
+    <button class="q-btn" id="biz-b-btn" onclick="switchBiz('b')">취급고</button>
+    <button class="q-btn off" id="biz-r-btn" onclick="switchBiz('r')">매출</button>
+  </div>
+  <div class="chart-box">
+    <div class="leg">
+      <span><span class="lsq" style="background:#1d4ed8;"></span>KPI</span>
+      <span><span class="lsq" style="background:#0c9e6e;"></span>실적</span>
+      <span><span class="lln" style="background:#d97706;"></span>달성률(%)</span>
+    </div>
+    <div style="position:relative;width:100%;height:230px;"><canvas id="bizMonthChart"></canvas></div>
+  </div>
+
+  <div class="sec-lbl">상품별 취급고 달성 현황 (1~6월)</div>
+  <div class="chart-box">
+    <div class="leg">
+      <span><span class="lsq" style="background:#1d4ed8;"></span>KPI</span>
+      <span><span class="lsq" style="background:#0c9e6e;"></span>실적</span>
+      <span><span class="lln" style="background:#d97706;"></span>달성률(%)</span>
+    </div>
+    <div style="position:relative;width:100%;height:240px;"><canvas id="bizProdBChart"></canvas></div>
+  </div>
+
+  <div class="sec-lbl">상품별 매출 달성 현황 (1~6월)</div>
+  <div class="chart-box">
+    <div class="leg">
+      <span><span class="lsq" style="background:#1d4ed8;"></span>KPI</span>
+      <span><span class="lsq" style="background:#d97706;"></span>실적</span>
+      <span><span class="lln" style="background:#dc2626;"></span>달성률(%)</span>
+    </div>
+    <div style="position:relative;width:100%;height:240px;"><canvas id="bizProdRChart"></canvas></div>
+  </div>
+
+  <div class="sec-lbl">상품별 상반기 실적 상세</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>상품</th><th>취급고 KPI</th><th>취급고 실적</th><th>취급고 달성률</th><th>매출 KPI</th><th>매출 실적</th><th>매출 달성률</th></tr></thead>
+    <tbody id="bizTable"></tbody>
+  </table></div>
+</div>
+
+<!-- 미디어마케팅팀 페이지 -->
+<div id="page-mkt" class="page">
+  <p style="font-size:12px;color:var(--ts);margin-bottom:1rem;">미디어마케팅팀 KPI 달성 현황 — ASUM · 비즈챗 · Stellaize · RMN · 다윈</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-card" style="--accent:#2563eb;">
+      <div class="kl">취급고 KPI (상반기)</div>
+      <div class="kv" style="color:#2563eb;">1,250,000,000</div>
+      <div class="ks">연간 2,940,000,000</div>
+    </div>
+    <div class="kpi-card" style="--accent:#d97706;">
+      <div class="kl">매출 KPI (상반기)</div>
+      <div class="kv" style="color:#d97706;">740,500,000</div>
+      <div class="ks">연간 1,815,500,000</div>
+    </div>
+    <div class="kpi-card" style="--accent:#0c9e6e;">
+      <div class="kl">취급고 달성률 (1~6월)</div>
+      <div class="kv" style="color:#0c9e6e;">149.9%</div>
+      <div class="ks">1,873,950,000 / KPI 1,250,000,000</div>
+    </div>
+    <div class="kpi-card" style="--accent:#dc2626;">
+      <div class="kl">매출 달성률 (1~6월)</div>
+      <div class="kv" style="color:#dc2626;">90.8%</div>
+      <div class="ks">672,310,000 / KPI 740,500,000</div>
+    </div>
+  </div>
+
+  <div class="sec-lbl">월별 취급고 · 매출 KPI vs 실적</div>
+  <div style="display:flex;gap:6px;margin-bottom:.8rem;">
+    <button class="q-btn" id="mkt-b-btn" onclick="switchMkt('b')">취급고</button>
+    <button class="q-btn off" id="mkt-r-btn" onclick="switchMkt('r')">매출</button>
+  </div>
+  <div class="chart-box">
+    <div class="leg">
+      <span><span class="lsq" style="background:#1d4ed8;"></span>KPI</span>
+      <span><span class="lsq" style="background:#0c9e6e;"></span>실적</span>
+      <span><span class="lln" style="background:#d97706;"></span>달성률(%)</span>
+    </div>
+    <div style="position:relative;width:100%;height:230px;"><canvas id="mktMonthChart"></canvas></div>
+  </div>
+
+  <div class="sec-lbl">상품별 취급고 달성 현황 (1~6월)</div>
+  <div class="chart-box">
+    <div class="leg">
+      <span><span class="lsq" style="background:#1d4ed8;"></span>KPI</span>
+      <span><span class="lsq" style="background:#0c9e6e;"></span>실적</span>
+      <span><span class="lln" style="background:#d97706;"></span>달성률(%)</span>
+    </div>
+    <div style="position:relative;width:100%;height:240px;"><canvas id="mktProdBChart"></canvas></div>
+  </div>
+
+  <div class="sec-lbl">상품별 매출 달성 현황 (1~6월)</div>
+  <div class="chart-box">
+    <div class="leg">
+      <span><span class="lsq" style="background:#1d4ed8;"></span>KPI</span>
+      <span><span class="lsq" style="background:#d97706;"></span>실적</span>
+      <span><span class="lln" style="background:#dc2626;"></span>달성률(%)</span>
+    </div>
+    <div style="position:relative;width:100%;height:240px;"><canvas id="mktProdRChart"></canvas></div>
+  </div>
+
+  <div class="sec-lbl">상품별 상반기 실적 상세</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>상품</th><th>취급고 KPI</th><th>취급고 실적</th><th>취급고 달성률</th><th>매출 KPI</th><th>매출 실적</th><th>매출 달성률</th></tr></thead>
+    <tbody id="mktTable"></tbody>
+  </table></div>
+</div>
 
 <!-- 캠페인 페이지 -->
 <div id="page-camp" class="page">
@@ -426,9 +565,333 @@ function renderCC(){
       </div></div>`).join('');
     return`<div class="c-ps"><div class="c-ph"><span class="c-badge" style="background:${c.bg};border-color:${c.bd};color:${c.tx};"><span style="width:7px;height:7px;border-radius:50%;background:${c.tp};display:inline-block;"></span>${p}</span><span class="c-meta">총 ${d.n}건 | 순매출 ${fr(d.r)} | 상위 3건</span></div><div class="cgrid">${cards}</div></div><hr class="c-div">`;
   }).join('');}
-function selM(m){curM=m;renderAll();}
-function togP(p){if(actP.has(p)){if(actP.size>1)actP.delete(p);}else actP.add(p);renderAll();}
-function togAll(){const prods=getP(curM);if(prods.every(p=>actP.has(p)))actP=new Set([prods[0]]);else prods.forEach(p=>actP.add(p));renderAll();}
+function selM(m){curM=m;
+// ── 팀별 데이터 ──
+const BIZ={"kpi_b_total": [22600, 25600, 32400, 30400, 30900, 32900, 34100, 36100, 39600, 42100, 42100, 31600], "kpi_r_total": [13769, 14219, 15239, 14939, 15014, 15314, 15494, 15794, 16319, 16694, 16694, 15119], "act_b_total": [21761, 25784, 28350, 27033, 30007, 28683, 2626, 2100, 3220, 0, 0, 0], "act_r_total": [6497, 18301, 14860, 14732, 15097, 11031, 2274, 2330, 2191, 1800, 1800, 1800], "prods": {"비즈링": {"kpi_b": [20000, 20000, 21500, 21500, 22000, 22000, 22500, 22500, 22500, 23000, 23000, 23000], "kpi_r": [3600, 3600, 3825, 3825, 3900, 3900, 3975, 3975, 3975, 4050, 4050, 4050], "act_b": [20345, 19508, 19665, 19549, 19615, 19377, 0, 0, 0, 0, 0, 0], "act_r": [3981, 3834, 3866, 3842, 3852, 0, 0, 0, 0, 0, 0, 0]}, "들리Go": {"kpi_b": [2000, 4000, 6000, 6000, 6000, 6000, 8000, 10000, 10000, 15000, 15000, 4500], "kpi_r": [300, 600, 900, 900, 900, 900, 1200, 1500, 1500, 2250, 2250, 675], "act_b": [800, 4264, 3964, 5791, 8025, 3582, 2581, 2100, 720, 0, 0, 0], "act_r": [100, 740, 895, 1094, 1875, 508, 429, 530, 216, 0, 0, 0]}, "문자&B2G": {"kpi_b": [600, 600, 1400, 1400, 1400, 1400, 2100, 2100, 2100, 2100, 2100, 2100], "kpi_r": [600, 600, 720, 720, 720, 720, 825, 825, 825, 825, 825, 825], "act_b": [616, 202, 2222, 1692, 717, 824, 45, 0, 0, 0, 0, 0], "act_r": [616, 202, 707, 772, 312, 374, 45, 0, 0, 0, 0, 0]}, "옥외광고": {"kpi_b": [0, 1000, 3500, 1500, 1500, 3500, 1500, 1500, 5000, 2000, 2000, 2000], "kpi_r": [0, 150, 525, 225, 225, 525, 225, 225, 750, 300, 300, 300], "act_b": [0, 1811, 2500, 0, 1650, 4900, 0, 0, 2500, 0, 0, 0], "act_r": [0, 127, 750, 0, 92, 1254, 0, 0, 175, 0, 0, 0]}, "용역": {"kpi_b": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "kpi_r": [9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269], "act_b": [1800, 13399, 8642, 9024, 8966, 8895, 1800, 1800, 1800, 1800, 1800, 1800], "act_r": [1800, 13399, 8642, 9024, 8966, 8895, 1800, 1800, 1800, 1800, 1800, 1800]}}};
+const MKT={"kpi_b_total": [17000, 19500, 20500, 22000, 22000, 24000, 26000, 26000, 27000, 28000, 30000, 32000], "kpi_r_total": [8780, 9140, 9770, 11430, 15930, 19000, 15390, 15390, 16360, 18490, 20120, 21750], "act_b_total": [44859, 22093, 48735, 26325, 22999, 22384, 14007, 2909, 2820, 2720, 2720, 2720], "act_r_total": [25775, 5221, 23968, 6141, 3721, 2405, 3462, 222, 222, 722, 722, 722], "prods": {"ASUM": {"kpi_b": [6000, 6000, 4000, 4000, 4000, 4000, 4000, 5000, 5000, 5000, 5000, 30000], "kpi_r": [600, 600, 400, 400, 400, 400, 400, 500, 500, 500, 500, 3000], "act_b": [6400, 6200, 4600, 4000, 5700, 4600, 0, 0, 0, 0, 0, 34030], "act_r": [520, 500, 340, 280, 570, 460, 0, 0, 0, 0, 0, 2803]}, "비즈챗": {"kpi_b": [8000, 9000, 11000, 11000, 10000, 13000, 13000, 12000, 13000, 14000, 15000, 55000], "kpi_r": [1040, 1170, 1430, 1430, 1300, 1690, 1690, 1560, 1690, 1820, 1950, 7150], "act_b": [7584, 10417, 11482, 12467, 8670, 0, 0, 0, 0, 0, 0, 60164], "act_r": [420, 1079, 1521, 1402, 744, 0, 0, 0, 0, 0, 0, 5861]}, "Stellaize": {"kpi_b": [3000, 3000, 4000, 4000, 6000, 5000, 5000, 6000, 6000, 7000, 8000, 23000], "kpi_r": [3000, 3000, 4000, 4000, 6000, 5000, 5000, 6000, 6000, 7000, 8000, 23000], "act_b": [3091, 20122, 2297, 6, 534, 1000, 0, 0, 0, 0, 0, 41050], "act_r": [3091, 20122, 2297, 6, 534, 1000, 0, 0, 0, 0, 0, 41050]}, "RMN": {"kpi_b": [2500, 2500, 3000, 3000, 4000, 4000, 4000, 4000, 4000, 4000, 4000, 17000], "kpi_r": [500, 500, 600, 600, 800, 800, 800, 800, 800, 800, 800, 3400], "act_b": [2900, 2300, 2820, 3220, 2220, 5220, 2220, 2220, 2220, 2220, 2220, 15360], "act_r": [1190, 310, 522, 562, 222, 522, 222, 222, 222, 222, 222, 2996]}, "다윈": {"kpi_b": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "kpi_r": [4000, 4500, 5000, 9500, 10500, 7500, 7500, 7500, 9500, 10000, 10500, 37500], "act_b": [2118, 9696, 4716, 3042, 6909, 3087, 589, 500, 0, 0, 0, 31040], "act_r": [0, 1957, 1457, 1457, 320, 680, 0, 0, 0, 0, 0, 7762]}}};
+
+// 팀별 월별 차트
+let bizMonthChart=null, mktMonthChart=null;
+function buildTeamMonth(team, seg){
+  const data = team==='biz'?BIZ:MKT;
+  const kpi = seg==='b'?data.kpi_b_total:data.kpi_r_total;
+  const act = seg==='b'?data.act_b_total:data.act_r_total;
+  const rates = kpi.map((k,i)=>k>0?Math.round(act[i]/k*1000)/10:null);
+  const bc = seg==='b'?'#0c9e6e':'#d97706';
+  const lc = seg==='b'?'#d97706':'#dc2626';
+  const id = team==='biz'?'bizMonthChart':'mktMonthChart';
+  if(team==='biz'){if(bizMonthChart)bizMonthChart.destroy();}
+  else{if(mktMonthChart)mktMonthChart.destroy();}
+  const chart = new Chart(document.getElementById(id),{type:'bar',data:{labels:M,datasets:[
+    {type:'bar',label:'KPI',data:kpi,backgroundColor:'#1d4ed8',borderWidth:0,order:2},
+    {type:'bar',label:'실적',data:act,backgroundColor:bc,borderWidth:0,order:1},
+    {type:'line',label:'달성률',data:rates,borderColor:lc,backgroundColor:'transparent',
+     pointBackgroundColor:lc,pointRadius:3,borderWidth:2,tension:0.3,yAxisID:'y2',order:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      label:ctx=>ctx.dataset.yAxisID==='y2'?` 달성률: ${ctx.raw??'-'}%`:` ${ctx.dataset.label}: ${(ctx.raw||0).toLocaleString()}만원`
+    }}},
+    scales:{
+      x:{ticks:{autoSkip:false,maxRotation:0,font:{size:10},color:'#556080'},grid:{display:false}},
+      y:{ticks:{callback:fmt,font:{size:10},color:'#556080'},grid:{color:'rgba(30,50,120,.07)'}},
+      y2:{position:'right',ticks:{callback:v=>v+'%',font:{size:10},color:lc},grid:{display:false},min:0,max:250}
+    }}});
+  if(team==='biz') bizMonthChart=chart; else mktMonthChart=chart;
+}
+
+function switchBiz(seg){
+  document.getElementById('biz-b-btn').className='q-btn'+(seg==='b'?'':' off');
+  document.getElementById('biz-r-btn').className='q-btn'+(seg==='r'?'':' off');
+  buildTeamMonth('biz',seg);
+}
+function switchMkt(seg){
+  document.getElementById('mkt-b-btn').className='q-btn'+(seg==='b'?'':' off');
+  document.getElementById('mkt-r-btn').className='q-btn'+(seg==='r'?'':' off');
+  buildTeamMonth('mkt',seg);
+}
+
+// 상품별 차트 생성
+function buildTeamProdChart(id, prods_data, type){
+  const labels = Object.keys(prods_data);
+  const kpiData = labels.map(p=>prods_data[p][type==='b'?'kpi_b':'kpi_r'].slice(0,6).reduce((a,b)=>a+b,0));
+  const actData = labels.map(p=>prods_data[p][type==='b'?'act_b':'act_r'].slice(0,6).reduce((a,b)=>a+b,0));
+  const rates   = kpiData.map((k,i)=>k>0?Math.round(actData[i]/k*1000)/10:null);
+  const ac = type==='b'?'#0c9e6e':'#d97706';
+  const lc = type==='b'?'#d97706':'#dc2626';
+  new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets:[
+    {type:'bar',label:'KPI',data:kpiData,backgroundColor:'#1d4ed8',borderWidth:0,order:2},
+    {type:'bar',label:'실적',data:actData,backgroundColor:ac,borderWidth:0,order:1},
+    {type:'line',label:'달성률',data:rates,borderColor:lc,backgroundColor:'transparent',
+     pointBackgroundColor:lc,pointRadius:4,borderWidth:2,tension:0.3,yAxisID:'y2',order:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      label:ctx=>ctx.dataset.yAxisID==='y2'?` 달성률: ${ctx.raw??'-'}%`:` ${ctx.dataset.label}: ${(ctx.raw||0).toLocaleString()}만원`
+    }}},
+    scales:{
+      x:{ticks:{autoSkip:false,maxRotation:0,font:{size:11},color:'#556080'},grid:{display:false}},
+      y:{ticks:{callback:fmt,font:{size:10},color:'#556080'},grid:{color:'rgba(30,50,120,.07)'}},
+      y2:{position:'right',ticks:{callback:v=>v+'%',font:{size:10},color:lc},grid:{display:false},min:0,suggestedMax:200}
+    }}});
+}
+
+// 상품별 테이블 생성
+function buildTeamTable(id, prods_data){
+  const rc2=(v,k)=>{const r=k>0?Math.round(v/k*1000)/10:0;const c=r>=100?'#0c9e6e':r>=70?'#d97706':r>0?'#dc2626':'#98a0b8';return`<td style="text-align:right;font-family:'DM Mono',monospace;font-size:12px;color:${c};">${r.toFixed(1)}%</td>`;};
+  const fmt2=v=>v>0?v.toLocaleString()+' 만':'-';
+  document.getElementById(id).innerHTML=Object.entries(prods_data).map(([prod,d])=>{
+    const kb=d.kpi_b.slice(0,6).reduce((a,b)=>a+b,0);
+    const ab=d.act_b.slice(0,6).reduce((a,b)=>a+b,0);
+    const kr=d.kpi_r.slice(0,6).reduce((a,b)=>a+b,0);
+    const ar=d.act_r.slice(0,6).reduce((a,b)=>a+b,0);
+    return`<tr>
+      <td style="font-weight:500;">${prod}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(kb)}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(ab)}</td>
+      ${rc2(ab,kb)}
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(kr)}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(ar)}</td>
+      ${rc2(ar,kr)}
+    </tr>`;
+  }).join('');
+}
+
+let bizChartsBuilt=false, mktChartsBuilt=false;
+function initBizCharts(){
+  if(bizChartsBuilt) return;
+  buildTeamMonth('biz','b');
+  buildTeamProdChart('bizProdBChart', BIZ.prods, 'b');
+  buildTeamProdChart('bizProdRChart', BIZ.prods, 'r');
+  buildTeamTable('bizTable', BIZ.prods);
+  bizChartsBuilt=true;
+}
+function initMktCharts(){
+  if(mktChartsBuilt) return;
+  buildTeamMonth('mkt','b');
+  buildTeamProdChart('mktProdBChart', MKT.prods, 'b');
+  buildTeamProdChart('mktProdRChart', MKT.prods, 'r');
+  buildTeamTable('mktTable', MKT.prods);
+  mktChartsBuilt=true;
+}
+
+renderAll();}
+function togP(p){if(actP.has(p)){if(actP.size>1)actP.delete(p);}else actP.add(p);
+// ── 팀별 데이터 ──
+const BIZ={"kpi_b_total": [22600, 25600, 32400, 30400, 30900, 32900, 34100, 36100, 39600, 42100, 42100, 31600], "kpi_r_total": [13769, 14219, 15239, 14939, 15014, 15314, 15494, 15794, 16319, 16694, 16694, 15119], "act_b_total": [21761, 25784, 28350, 27033, 30007, 28683, 2626, 2100, 3220, 0, 0, 0], "act_r_total": [6497, 18301, 14860, 14732, 15097, 11031, 2274, 2330, 2191, 1800, 1800, 1800], "prods": {"비즈링": {"kpi_b": [20000, 20000, 21500, 21500, 22000, 22000, 22500, 22500, 22500, 23000, 23000, 23000], "kpi_r": [3600, 3600, 3825, 3825, 3900, 3900, 3975, 3975, 3975, 4050, 4050, 4050], "act_b": [20345, 19508, 19665, 19549, 19615, 19377, 0, 0, 0, 0, 0, 0], "act_r": [3981, 3834, 3866, 3842, 3852, 0, 0, 0, 0, 0, 0, 0]}, "들리Go": {"kpi_b": [2000, 4000, 6000, 6000, 6000, 6000, 8000, 10000, 10000, 15000, 15000, 4500], "kpi_r": [300, 600, 900, 900, 900, 900, 1200, 1500, 1500, 2250, 2250, 675], "act_b": [800, 4264, 3964, 5791, 8025, 3582, 2581, 2100, 720, 0, 0, 0], "act_r": [100, 740, 895, 1094, 1875, 508, 429, 530, 216, 0, 0, 0]}, "문자&B2G": {"kpi_b": [600, 600, 1400, 1400, 1400, 1400, 2100, 2100, 2100, 2100, 2100, 2100], "kpi_r": [600, 600, 720, 720, 720, 720, 825, 825, 825, 825, 825, 825], "act_b": [616, 202, 2222, 1692, 717, 824, 45, 0, 0, 0, 0, 0], "act_r": [616, 202, 707, 772, 312, 374, 45, 0, 0, 0, 0, 0]}, "옥외광고": {"kpi_b": [0, 1000, 3500, 1500, 1500, 3500, 1500, 1500, 5000, 2000, 2000, 2000], "kpi_r": [0, 150, 525, 225, 225, 525, 225, 225, 750, 300, 300, 300], "act_b": [0, 1811, 2500, 0, 1650, 4900, 0, 0, 2500, 0, 0, 0], "act_r": [0, 127, 750, 0, 92, 1254, 0, 0, 175, 0, 0, 0]}, "용역": {"kpi_b": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "kpi_r": [9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269], "act_b": [1800, 13399, 8642, 9024, 8966, 8895, 1800, 1800, 1800, 1800, 1800, 1800], "act_r": [1800, 13399, 8642, 9024, 8966, 8895, 1800, 1800, 1800, 1800, 1800, 1800]}}};
+const MKT={"kpi_b_total": [17000, 19500, 20500, 22000, 22000, 24000, 26000, 26000, 27000, 28000, 30000, 32000], "kpi_r_total": [8780, 9140, 9770, 11430, 15930, 19000, 15390, 15390, 16360, 18490, 20120, 21750], "act_b_total": [44859, 22093, 48735, 26325, 22999, 22384, 14007, 2909, 2820, 2720, 2720, 2720], "act_r_total": [25775, 5221, 23968, 6141, 3721, 2405, 3462, 222, 222, 722, 722, 722], "prods": {"ASUM": {"kpi_b": [6000, 6000, 4000, 4000, 4000, 4000, 4000, 5000, 5000, 5000, 5000, 30000], "kpi_r": [600, 600, 400, 400, 400, 400, 400, 500, 500, 500, 500, 3000], "act_b": [6400, 6200, 4600, 4000, 5700, 4600, 0, 0, 0, 0, 0, 34030], "act_r": [520, 500, 340, 280, 570, 460, 0, 0, 0, 0, 0, 2803]}, "비즈챗": {"kpi_b": [8000, 9000, 11000, 11000, 10000, 13000, 13000, 12000, 13000, 14000, 15000, 55000], "kpi_r": [1040, 1170, 1430, 1430, 1300, 1690, 1690, 1560, 1690, 1820, 1950, 7150], "act_b": [7584, 10417, 11482, 12467, 8670, 0, 0, 0, 0, 0, 0, 60164], "act_r": [420, 1079, 1521, 1402, 744, 0, 0, 0, 0, 0, 0, 5861]}, "Stellaize": {"kpi_b": [3000, 3000, 4000, 4000, 6000, 5000, 5000, 6000, 6000, 7000, 8000, 23000], "kpi_r": [3000, 3000, 4000, 4000, 6000, 5000, 5000, 6000, 6000, 7000, 8000, 23000], "act_b": [3091, 20122, 2297, 6, 534, 1000, 0, 0, 0, 0, 0, 41050], "act_r": [3091, 20122, 2297, 6, 534, 1000, 0, 0, 0, 0, 0, 41050]}, "RMN": {"kpi_b": [2500, 2500, 3000, 3000, 4000, 4000, 4000, 4000, 4000, 4000, 4000, 17000], "kpi_r": [500, 500, 600, 600, 800, 800, 800, 800, 800, 800, 800, 3400], "act_b": [2900, 2300, 2820, 3220, 2220, 5220, 2220, 2220, 2220, 2220, 2220, 15360], "act_r": [1190, 310, 522, 562, 222, 522, 222, 222, 222, 222, 222, 2996]}, "다윈": {"kpi_b": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "kpi_r": [4000, 4500, 5000, 9500, 10500, 7500, 7500, 7500, 9500, 10000, 10500, 37500], "act_b": [2118, 9696, 4716, 3042, 6909, 3087, 589, 500, 0, 0, 0, 31040], "act_r": [0, 1957, 1457, 1457, 320, 680, 0, 0, 0, 0, 0, 7762]}}};
+
+// 팀별 월별 차트
+let bizMonthChart=null, mktMonthChart=null;
+function buildTeamMonth(team, seg){
+  const data = team==='biz'?BIZ:MKT;
+  const kpi = seg==='b'?data.kpi_b_total:data.kpi_r_total;
+  const act = seg==='b'?data.act_b_total:data.act_r_total;
+  const rates = kpi.map((k,i)=>k>0?Math.round(act[i]/k*1000)/10:null);
+  const bc = seg==='b'?'#0c9e6e':'#d97706';
+  const lc = seg==='b'?'#d97706':'#dc2626';
+  const id = team==='biz'?'bizMonthChart':'mktMonthChart';
+  if(team==='biz'){if(bizMonthChart)bizMonthChart.destroy();}
+  else{if(mktMonthChart)mktMonthChart.destroy();}
+  const chart = new Chart(document.getElementById(id),{type:'bar',data:{labels:M,datasets:[
+    {type:'bar',label:'KPI',data:kpi,backgroundColor:'#1d4ed8',borderWidth:0,order:2},
+    {type:'bar',label:'실적',data:act,backgroundColor:bc,borderWidth:0,order:1},
+    {type:'line',label:'달성률',data:rates,borderColor:lc,backgroundColor:'transparent',
+     pointBackgroundColor:lc,pointRadius:3,borderWidth:2,tension:0.3,yAxisID:'y2',order:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      label:ctx=>ctx.dataset.yAxisID==='y2'?` 달성률: ${ctx.raw??'-'}%`:` ${ctx.dataset.label}: ${(ctx.raw||0).toLocaleString()}만원`
+    }}},
+    scales:{
+      x:{ticks:{autoSkip:false,maxRotation:0,font:{size:10},color:'#556080'},grid:{display:false}},
+      y:{ticks:{callback:fmt,font:{size:10},color:'#556080'},grid:{color:'rgba(30,50,120,.07)'}},
+      y2:{position:'right',ticks:{callback:v=>v+'%',font:{size:10},color:lc},grid:{display:false},min:0,max:250}
+    }}});
+  if(team==='biz') bizMonthChart=chart; else mktMonthChart=chart;
+}
+
+function switchBiz(seg){
+  document.getElementById('biz-b-btn').className='q-btn'+(seg==='b'?'':' off');
+  document.getElementById('biz-r-btn').className='q-btn'+(seg==='r'?'':' off');
+  buildTeamMonth('biz',seg);
+}
+function switchMkt(seg){
+  document.getElementById('mkt-b-btn').className='q-btn'+(seg==='b'?'':' off');
+  document.getElementById('mkt-r-btn').className='q-btn'+(seg==='r'?'':' off');
+  buildTeamMonth('mkt',seg);
+}
+
+// 상품별 차트 생성
+function buildTeamProdChart(id, prods_data, type){
+  const labels = Object.keys(prods_data);
+  const kpiData = labels.map(p=>prods_data[p][type==='b'?'kpi_b':'kpi_r'].slice(0,6).reduce((a,b)=>a+b,0));
+  const actData = labels.map(p=>prods_data[p][type==='b'?'act_b':'act_r'].slice(0,6).reduce((a,b)=>a+b,0));
+  const rates   = kpiData.map((k,i)=>k>0?Math.round(actData[i]/k*1000)/10:null);
+  const ac = type==='b'?'#0c9e6e':'#d97706';
+  const lc = type==='b'?'#d97706':'#dc2626';
+  new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets:[
+    {type:'bar',label:'KPI',data:kpiData,backgroundColor:'#1d4ed8',borderWidth:0,order:2},
+    {type:'bar',label:'실적',data:actData,backgroundColor:ac,borderWidth:0,order:1},
+    {type:'line',label:'달성률',data:rates,borderColor:lc,backgroundColor:'transparent',
+     pointBackgroundColor:lc,pointRadius:4,borderWidth:2,tension:0.3,yAxisID:'y2',order:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      label:ctx=>ctx.dataset.yAxisID==='y2'?` 달성률: ${ctx.raw??'-'}%`:` ${ctx.dataset.label}: ${(ctx.raw||0).toLocaleString()}만원`
+    }}},
+    scales:{
+      x:{ticks:{autoSkip:false,maxRotation:0,font:{size:11},color:'#556080'},grid:{display:false}},
+      y:{ticks:{callback:fmt,font:{size:10},color:'#556080'},grid:{color:'rgba(30,50,120,.07)'}},
+      y2:{position:'right',ticks:{callback:v=>v+'%',font:{size:10},color:lc},grid:{display:false},min:0,suggestedMax:200}
+    }}});
+}
+
+// 상품별 테이블 생성
+function buildTeamTable(id, prods_data){
+  const rc2=(v,k)=>{const r=k>0?Math.round(v/k*1000)/10:0;const c=r>=100?'#0c9e6e':r>=70?'#d97706':r>0?'#dc2626':'#98a0b8';return`<td style="text-align:right;font-family:'DM Mono',monospace;font-size:12px;color:${c};">${r.toFixed(1)}%</td>`;};
+  const fmt2=v=>v>0?v.toLocaleString()+' 만':'-';
+  document.getElementById(id).innerHTML=Object.entries(prods_data).map(([prod,d])=>{
+    const kb=d.kpi_b.slice(0,6).reduce((a,b)=>a+b,0);
+    const ab=d.act_b.slice(0,6).reduce((a,b)=>a+b,0);
+    const kr=d.kpi_r.slice(0,6).reduce((a,b)=>a+b,0);
+    const ar=d.act_r.slice(0,6).reduce((a,b)=>a+b,0);
+    return`<tr>
+      <td style="font-weight:500;">${prod}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(kb)}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(ab)}</td>
+      ${rc2(ab,kb)}
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(kr)}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(ar)}</td>
+      ${rc2(ar,kr)}
+    </tr>`;
+  }).join('');
+}
+
+let bizChartsBuilt=false, mktChartsBuilt=false;
+function initBizCharts(){
+  if(bizChartsBuilt) return;
+  buildTeamMonth('biz','b');
+  buildTeamProdChart('bizProdBChart', BIZ.prods, 'b');
+  buildTeamProdChart('bizProdRChart', BIZ.prods, 'r');
+  buildTeamTable('bizTable', BIZ.prods);
+  bizChartsBuilt=true;
+}
+function initMktCharts(){
+  if(mktChartsBuilt) return;
+  buildTeamMonth('mkt','b');
+  buildTeamProdChart('mktProdBChart', MKT.prods, 'b');
+  buildTeamProdChart('mktProdRChart', MKT.prods, 'r');
+  buildTeamTable('mktTable', MKT.prods);
+  mktChartsBuilt=true;
+}
+
+renderAll();}
+function togAll(){const prods=getP(curM);if(prods.every(p=>actP.has(p)))actP=new Set([prods[0]]);else prods.forEach(p=>actP.add(p));
+// ── 팀별 데이터 ──
+const BIZ={"kpi_b_total": [22600, 25600, 32400, 30400, 30900, 32900, 34100, 36100, 39600, 42100, 42100, 31600], "kpi_r_total": [13769, 14219, 15239, 14939, 15014, 15314, 15494, 15794, 16319, 16694, 16694, 15119], "act_b_total": [21761, 25784, 28350, 27033, 30007, 28683, 2626, 2100, 3220, 0, 0, 0], "act_r_total": [6497, 18301, 14860, 14732, 15097, 11031, 2274, 2330, 2191, 1800, 1800, 1800], "prods": {"비즈링": {"kpi_b": [20000, 20000, 21500, 21500, 22000, 22000, 22500, 22500, 22500, 23000, 23000, 23000], "kpi_r": [3600, 3600, 3825, 3825, 3900, 3900, 3975, 3975, 3975, 4050, 4050, 4050], "act_b": [20345, 19508, 19665, 19549, 19615, 19377, 0, 0, 0, 0, 0, 0], "act_r": [3981, 3834, 3866, 3842, 3852, 0, 0, 0, 0, 0, 0, 0]}, "들리Go": {"kpi_b": [2000, 4000, 6000, 6000, 6000, 6000, 8000, 10000, 10000, 15000, 15000, 4500], "kpi_r": [300, 600, 900, 900, 900, 900, 1200, 1500, 1500, 2250, 2250, 675], "act_b": [800, 4264, 3964, 5791, 8025, 3582, 2581, 2100, 720, 0, 0, 0], "act_r": [100, 740, 895, 1094, 1875, 508, 429, 530, 216, 0, 0, 0]}, "문자&B2G": {"kpi_b": [600, 600, 1400, 1400, 1400, 1400, 2100, 2100, 2100, 2100, 2100, 2100], "kpi_r": [600, 600, 720, 720, 720, 720, 825, 825, 825, 825, 825, 825], "act_b": [616, 202, 2222, 1692, 717, 824, 45, 0, 0, 0, 0, 0], "act_r": [616, 202, 707, 772, 312, 374, 45, 0, 0, 0, 0, 0]}, "옥외광고": {"kpi_b": [0, 1000, 3500, 1500, 1500, 3500, 1500, 1500, 5000, 2000, 2000, 2000], "kpi_r": [0, 150, 525, 225, 225, 525, 225, 225, 750, 300, 300, 300], "act_b": [0, 1811, 2500, 0, 1650, 4900, 0, 0, 2500, 0, 0, 0], "act_r": [0, 127, 750, 0, 92, 1254, 0, 0, 175, 0, 0, 0]}, "용역": {"kpi_b": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "kpi_r": [9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269], "act_b": [1800, 13399, 8642, 9024, 8966, 8895, 1800, 1800, 1800, 1800, 1800, 1800], "act_r": [1800, 13399, 8642, 9024, 8966, 8895, 1800, 1800, 1800, 1800, 1800, 1800]}}};
+const MKT={"kpi_b_total": [17000, 19500, 20500, 22000, 22000, 24000, 26000, 26000, 27000, 28000, 30000, 32000], "kpi_r_total": [8780, 9140, 9770, 11430, 15930, 19000, 15390, 15390, 16360, 18490, 20120, 21750], "act_b_total": [44859, 22093, 48735, 26325, 22999, 22384, 14007, 2909, 2820, 2720, 2720, 2720], "act_r_total": [25775, 5221, 23968, 6141, 3721, 2405, 3462, 222, 222, 722, 722, 722], "prods": {"ASUM": {"kpi_b": [6000, 6000, 4000, 4000, 4000, 4000, 4000, 5000, 5000, 5000, 5000, 30000], "kpi_r": [600, 600, 400, 400, 400, 400, 400, 500, 500, 500, 500, 3000], "act_b": [6400, 6200, 4600, 4000, 5700, 4600, 0, 0, 0, 0, 0, 34030], "act_r": [520, 500, 340, 280, 570, 460, 0, 0, 0, 0, 0, 2803]}, "비즈챗": {"kpi_b": [8000, 9000, 11000, 11000, 10000, 13000, 13000, 12000, 13000, 14000, 15000, 55000], "kpi_r": [1040, 1170, 1430, 1430, 1300, 1690, 1690, 1560, 1690, 1820, 1950, 7150], "act_b": [7584, 10417, 11482, 12467, 8670, 0, 0, 0, 0, 0, 0, 60164], "act_r": [420, 1079, 1521, 1402, 744, 0, 0, 0, 0, 0, 0, 5861]}, "Stellaize": {"kpi_b": [3000, 3000, 4000, 4000, 6000, 5000, 5000, 6000, 6000, 7000, 8000, 23000], "kpi_r": [3000, 3000, 4000, 4000, 6000, 5000, 5000, 6000, 6000, 7000, 8000, 23000], "act_b": [3091, 20122, 2297, 6, 534, 1000, 0, 0, 0, 0, 0, 41050], "act_r": [3091, 20122, 2297, 6, 534, 1000, 0, 0, 0, 0, 0, 41050]}, "RMN": {"kpi_b": [2500, 2500, 3000, 3000, 4000, 4000, 4000, 4000, 4000, 4000, 4000, 17000], "kpi_r": [500, 500, 600, 600, 800, 800, 800, 800, 800, 800, 800, 3400], "act_b": [2900, 2300, 2820, 3220, 2220, 5220, 2220, 2220, 2220, 2220, 2220, 15360], "act_r": [1190, 310, 522, 562, 222, 522, 222, 222, 222, 222, 222, 2996]}, "다윈": {"kpi_b": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "kpi_r": [4000, 4500, 5000, 9500, 10500, 7500, 7500, 7500, 9500, 10000, 10500, 37500], "act_b": [2118, 9696, 4716, 3042, 6909, 3087, 589, 500, 0, 0, 0, 31040], "act_r": [0, 1957, 1457, 1457, 320, 680, 0, 0, 0, 0, 0, 7762]}}};
+
+// 팀별 월별 차트
+let bizMonthChart=null, mktMonthChart=null;
+function buildTeamMonth(team, seg){
+  const data = team==='biz'?BIZ:MKT;
+  const kpi = seg==='b'?data.kpi_b_total:data.kpi_r_total;
+  const act = seg==='b'?data.act_b_total:data.act_r_total;
+  const rates = kpi.map((k,i)=>k>0?Math.round(act[i]/k*1000)/10:null);
+  const bc = seg==='b'?'#0c9e6e':'#d97706';
+  const lc = seg==='b'?'#d97706':'#dc2626';
+  const id = team==='biz'?'bizMonthChart':'mktMonthChart';
+  if(team==='biz'){if(bizMonthChart)bizMonthChart.destroy();}
+  else{if(mktMonthChart)mktMonthChart.destroy();}
+  const chart = new Chart(document.getElementById(id),{type:'bar',data:{labels:M,datasets:[
+    {type:'bar',label:'KPI',data:kpi,backgroundColor:'#1d4ed8',borderWidth:0,order:2},
+    {type:'bar',label:'실적',data:act,backgroundColor:bc,borderWidth:0,order:1},
+    {type:'line',label:'달성률',data:rates,borderColor:lc,backgroundColor:'transparent',
+     pointBackgroundColor:lc,pointRadius:3,borderWidth:2,tension:0.3,yAxisID:'y2',order:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      label:ctx=>ctx.dataset.yAxisID==='y2'?` 달성률: ${ctx.raw??'-'}%`:` ${ctx.dataset.label}: ${(ctx.raw||0).toLocaleString()}만원`
+    }}},
+    scales:{
+      x:{ticks:{autoSkip:false,maxRotation:0,font:{size:10},color:'#556080'},grid:{display:false}},
+      y:{ticks:{callback:fmt,font:{size:10},color:'#556080'},grid:{color:'rgba(30,50,120,.07)'}},
+      y2:{position:'right',ticks:{callback:v=>v+'%',font:{size:10},color:lc},grid:{display:false},min:0,max:250}
+    }}});
+  if(team==='biz') bizMonthChart=chart; else mktMonthChart=chart;
+}
+
+function switchBiz(seg){
+  document.getElementById('biz-b-btn').className='q-btn'+(seg==='b'?'':' off');
+  document.getElementById('biz-r-btn').className='q-btn'+(seg==='r'?'':' off');
+  buildTeamMonth('biz',seg);
+}
+function switchMkt(seg){
+  document.getElementById('mkt-b-btn').className='q-btn'+(seg==='b'?'':' off');
+  document.getElementById('mkt-r-btn').className='q-btn'+(seg==='r'?'':' off');
+  buildTeamMonth('mkt',seg);
+}
+
+// 상품별 차트 생성
+function buildTeamProdChart(id, prods_data, type){
+  const labels = Object.keys(prods_data);
+  const kpiData = labels.map(p=>prods_data[p][type==='b'?'kpi_b':'kpi_r'].slice(0,6).reduce((a,b)=>a+b,0));
+  const actData = labels.map(p=>prods_data[p][type==='b'?'act_b':'act_r'].slice(0,6).reduce((a,b)=>a+b,0));
+  const rates   = kpiData.map((k,i)=>k>0?Math.round(actData[i]/k*1000)/10:null);
+  const ac = type==='b'?'#0c9e6e':'#d97706';
+  const lc = type==='b'?'#d97706':'#dc2626';
+  new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets:[
+    {type:'bar',label:'KPI',data:kpiData,backgroundColor:'#1d4ed8',borderWidth:0,order:2},
+    {type:'bar',label:'실적',data:actData,backgroundColor:ac,borderWidth:0,order:1},
+    {type:'line',label:'달성률',data:rates,borderColor:lc,backgroundColor:'transparent',
+     pointBackgroundColor:lc,pointRadius:4,borderWidth:2,tension:0.3,yAxisID:'y2',order:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      label:ctx=>ctx.dataset.yAxisID==='y2'?` 달성률: ${ctx.raw??'-'}%`:` ${ctx.dataset.label}: ${(ctx.raw||0).toLocaleString()}만원`
+    }}},
+    scales:{
+      x:{ticks:{autoSkip:false,maxRotation:0,font:{size:11},color:'#556080'},grid:{display:false}},
+      y:{ticks:{callback:fmt,font:{size:10},color:'#556080'},grid:{color:'rgba(30,50,120,.07)'}},
+      y2:{position:'right',ticks:{callback:v=>v+'%',font:{size:10},color:lc},grid:{display:false},min:0,suggestedMax:200}
+    }}});
+}
+
+// 상품별 테이블 생성
+function buildTeamTable(id, prods_data){
+  const rc2=(v,k)=>{const r=k>0?Math.round(v/k*1000)/10:0;const c=r>=100?'#0c9e6e':r>=70?'#d97706':r>0?'#dc2626':'#98a0b8';return`<td style="text-align:right;font-family:'DM Mono',monospace;font-size:12px;color:${c};">${r.toFixed(1)}%</td>`;};
+  const fmt2=v=>v>0?v.toLocaleString()+' 만':'-';
+  document.getElementById(id).innerHTML=Object.entries(prods_data).map(([prod,d])=>{
+    const kb=d.kpi_b.slice(0,6).reduce((a,b)=>a+b,0);
+    const ab=d.act_b.slice(0,6).reduce((a,b)=>a+b,0);
+    const kr=d.kpi_r.slice(0,6).reduce((a,b)=>a+b,0);
+    const ar=d.act_r.slice(0,6).reduce((a,b)=>a+b,0);
+    return`<tr>
+      <td style="font-weight:500;">${prod}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(kb)}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(ab)}</td>
+      ${rc2(ab,kb)}
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(kr)}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(ar)}</td>
+      ${rc2(ar,kr)}
+    </tr>`;
+  }).join('');
+}
+
+let bizChartsBuilt=false, mktChartsBuilt=false;
+function initBizCharts(){
+  if(bizChartsBuilt) return;
+  buildTeamMonth('biz','b');
+  buildTeamProdChart('bizProdBChart', BIZ.prods, 'b');
+  buildTeamProdChart('bizProdRChart', BIZ.prods, 'r');
+  buildTeamTable('bizTable', BIZ.prods);
+  bizChartsBuilt=true;
+}
+function initMktCharts(){
+  if(mktChartsBuilt) return;
+  buildTeamMonth('mkt','b');
+  buildTeamProdChart('mktProdBChart', MKT.prods, 'b');
+  buildTeamProdChart('mktProdRChart', MKT.prods, 'r');
+  buildTeamTable('mktTable', MKT.prods);
+  mktChartsBuilt=true;
+}
+
+renderAll();}
 function renderAll(){renderMT();renderPT();renderCS();renderCC();}
 
 // ── 대행사 ──
@@ -482,12 +945,122 @@ function renderAG(){
 function selAG(p){curAG=p;renderAG();}
 
 function goPage(p){
-  ['kpi','camp','agency'].forEach(k=>{
+  ['kpi','biz','mkt','camp','agency'].forEach(k=>{
     document.getElementById('page-'+k).classList.toggle('active',k===p);
     document.getElementById('nav-'+k).classList.toggle('active',k===p);
   });
   if(p==='agency') renderAG();
+  if(p==='biz') initBizCharts();
+  if(p==='mkt') initMktCharts();
 }
+
+// ── 팀별 데이터 ──
+const BIZ={"kpi_b_total": [22600, 25600, 32400, 30400, 30900, 32900, 34100, 36100, 39600, 42100, 42100, 31600], "kpi_r_total": [13769, 14219, 15239, 14939, 15014, 15314, 15494, 15794, 16319, 16694, 16694, 15119], "act_b_total": [21761, 25784, 28350, 27033, 30007, 28683, 2626, 2100, 3220, 0, 0, 0], "act_r_total": [6497, 18301, 14860, 14732, 15097, 11031, 2274, 2330, 2191, 1800, 1800, 1800], "prods": {"비즈링": {"kpi_b": [20000, 20000, 21500, 21500, 22000, 22000, 22500, 22500, 22500, 23000, 23000, 23000], "kpi_r": [3600, 3600, 3825, 3825, 3900, 3900, 3975, 3975, 3975, 4050, 4050, 4050], "act_b": [20345, 19508, 19665, 19549, 19615, 19377, 0, 0, 0, 0, 0, 0], "act_r": [3981, 3834, 3866, 3842, 3852, 0, 0, 0, 0, 0, 0, 0]}, "들리Go": {"kpi_b": [2000, 4000, 6000, 6000, 6000, 6000, 8000, 10000, 10000, 15000, 15000, 4500], "kpi_r": [300, 600, 900, 900, 900, 900, 1200, 1500, 1500, 2250, 2250, 675], "act_b": [800, 4264, 3964, 5791, 8025, 3582, 2581, 2100, 720, 0, 0, 0], "act_r": [100, 740, 895, 1094, 1875, 508, 429, 530, 216, 0, 0, 0]}, "문자&B2G": {"kpi_b": [600, 600, 1400, 1400, 1400, 1400, 2100, 2100, 2100, 2100, 2100, 2100], "kpi_r": [600, 600, 720, 720, 720, 720, 825, 825, 825, 825, 825, 825], "act_b": [616, 202, 2222, 1692, 717, 824, 45, 0, 0, 0, 0, 0], "act_r": [616, 202, 707, 772, 312, 374, 45, 0, 0, 0, 0, 0]}, "옥외광고": {"kpi_b": [0, 1000, 3500, 1500, 1500, 3500, 1500, 1500, 5000, 2000, 2000, 2000], "kpi_r": [0, 150, 525, 225, 225, 525, 225, 225, 750, 300, 300, 300], "act_b": [0, 1811, 2500, 0, 1650, 4900, 0, 0, 2500, 0, 0, 0], "act_r": [0, 127, 750, 0, 92, 1254, 0, 0, 175, 0, 0, 0]}, "용역": {"kpi_b": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "kpi_r": [9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269], "act_b": [1800, 13399, 8642, 9024, 8966, 8895, 1800, 1800, 1800, 1800, 1800, 1800], "act_r": [1800, 13399, 8642, 9024, 8966, 8895, 1800, 1800, 1800, 1800, 1800, 1800]}}};
+const MKT={"kpi_b_total": [17000, 19500, 20500, 22000, 22000, 24000, 26000, 26000, 27000, 28000, 30000, 32000], "kpi_r_total": [8780, 9140, 9770, 11430, 15930, 19000, 15390, 15390, 16360, 18490, 20120, 21750], "act_b_total": [44859, 22093, 48735, 26325, 22999, 22384, 14007, 2909, 2820, 2720, 2720, 2720], "act_r_total": [25775, 5221, 23968, 6141, 3721, 2405, 3462, 222, 222, 722, 722, 722], "prods": {"ASUM": {"kpi_b": [6000, 6000, 4000, 4000, 4000, 4000, 4000, 5000, 5000, 5000, 5000, 30000], "kpi_r": [600, 600, 400, 400, 400, 400, 400, 500, 500, 500, 500, 3000], "act_b": [6400, 6200, 4600, 4000, 5700, 4600, 0, 0, 0, 0, 0, 34030], "act_r": [520, 500, 340, 280, 570, 460, 0, 0, 0, 0, 0, 2803]}, "비즈챗": {"kpi_b": [8000, 9000, 11000, 11000, 10000, 13000, 13000, 12000, 13000, 14000, 15000, 55000], "kpi_r": [1040, 1170, 1430, 1430, 1300, 1690, 1690, 1560, 1690, 1820, 1950, 7150], "act_b": [7584, 10417, 11482, 12467, 8670, 0, 0, 0, 0, 0, 0, 60164], "act_r": [420, 1079, 1521, 1402, 744, 0, 0, 0, 0, 0, 0, 5861]}, "Stellaize": {"kpi_b": [3000, 3000, 4000, 4000, 6000, 5000, 5000, 6000, 6000, 7000, 8000, 23000], "kpi_r": [3000, 3000, 4000, 4000, 6000, 5000, 5000, 6000, 6000, 7000, 8000, 23000], "act_b": [3091, 20122, 2297, 6, 534, 1000, 0, 0, 0, 0, 0, 41050], "act_r": [3091, 20122, 2297, 6, 534, 1000, 0, 0, 0, 0, 0, 41050]}, "RMN": {"kpi_b": [2500, 2500, 3000, 3000, 4000, 4000, 4000, 4000, 4000, 4000, 4000, 17000], "kpi_r": [500, 500, 600, 600, 800, 800, 800, 800, 800, 800, 800, 3400], "act_b": [2900, 2300, 2820, 3220, 2220, 5220, 2220, 2220, 2220, 2220, 2220, 15360], "act_r": [1190, 310, 522, 562, 222, 522, 222, 222, 222, 222, 222, 2996]}, "다윈": {"kpi_b": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "kpi_r": [4000, 4500, 5000, 9500, 10500, 7500, 7500, 7500, 9500, 10000, 10500, 37500], "act_b": [2118, 9696, 4716, 3042, 6909, 3087, 589, 500, 0, 0, 0, 31040], "act_r": [0, 1957, 1457, 1457, 320, 680, 0, 0, 0, 0, 0, 7762]}}};
+
+// 팀별 월별 차트
+let bizMonthChart=null, mktMonthChart=null;
+function buildTeamMonth(team, seg){
+  const data = team==='biz'?BIZ:MKT;
+  const kpi = seg==='b'?data.kpi_b_total:data.kpi_r_total;
+  const act = seg==='b'?data.act_b_total:data.act_r_total;
+  const rates = kpi.map((k,i)=>k>0?Math.round(act[i]/k*1000)/10:null);
+  const bc = seg==='b'?'#0c9e6e':'#d97706';
+  const lc = seg==='b'?'#d97706':'#dc2626';
+  const id = team==='biz'?'bizMonthChart':'mktMonthChart';
+  if(team==='biz'){if(bizMonthChart)bizMonthChart.destroy();}
+  else{if(mktMonthChart)mktMonthChart.destroy();}
+  const chart = new Chart(document.getElementById(id),{type:'bar',data:{labels:M,datasets:[
+    {type:'bar',label:'KPI',data:kpi,backgroundColor:'#1d4ed8',borderWidth:0,order:2},
+    {type:'bar',label:'실적',data:act,backgroundColor:bc,borderWidth:0,order:1},
+    {type:'line',label:'달성률',data:rates,borderColor:lc,backgroundColor:'transparent',
+     pointBackgroundColor:lc,pointRadius:3,borderWidth:2,tension:0.3,yAxisID:'y2',order:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      label:ctx=>ctx.dataset.yAxisID==='y2'?` 달성률: ${ctx.raw??'-'}%`:` ${ctx.dataset.label}: ${(ctx.raw||0).toLocaleString()}만원`
+    }}},
+    scales:{
+      x:{ticks:{autoSkip:false,maxRotation:0,font:{size:10},color:'#556080'},grid:{display:false}},
+      y:{ticks:{callback:fmt,font:{size:10},color:'#556080'},grid:{color:'rgba(30,50,120,.07)'}},
+      y2:{position:'right',ticks:{callback:v=>v+'%',font:{size:10},color:lc},grid:{display:false},min:0,max:250}
+    }}});
+  if(team==='biz') bizMonthChart=chart; else mktMonthChart=chart;
+}
+
+function switchBiz(seg){
+  document.getElementById('biz-b-btn').className='q-btn'+(seg==='b'?'':' off');
+  document.getElementById('biz-r-btn').className='q-btn'+(seg==='r'?'':' off');
+  buildTeamMonth('biz',seg);
+}
+function switchMkt(seg){
+  document.getElementById('mkt-b-btn').className='q-btn'+(seg==='b'?'':' off');
+  document.getElementById('mkt-r-btn').className='q-btn'+(seg==='r'?'':' off');
+  buildTeamMonth('mkt',seg);
+}
+
+// 상품별 차트 생성
+function buildTeamProdChart(id, prods_data, type){
+  const labels = Object.keys(prods_data);
+  const kpiData = labels.map(p=>prods_data[p][type==='b'?'kpi_b':'kpi_r'].slice(0,6).reduce((a,b)=>a+b,0));
+  const actData = labels.map(p=>prods_data[p][type==='b'?'act_b':'act_r'].slice(0,6).reduce((a,b)=>a+b,0));
+  const rates   = kpiData.map((k,i)=>k>0?Math.round(actData[i]/k*1000)/10:null);
+  const ac = type==='b'?'#0c9e6e':'#d97706';
+  const lc = type==='b'?'#d97706':'#dc2626';
+  new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets:[
+    {type:'bar',label:'KPI',data:kpiData,backgroundColor:'#1d4ed8',borderWidth:0,order:2},
+    {type:'bar',label:'실적',data:actData,backgroundColor:ac,borderWidth:0,order:1},
+    {type:'line',label:'달성률',data:rates,borderColor:lc,backgroundColor:'transparent',
+     pointBackgroundColor:lc,pointRadius:4,borderWidth:2,tension:0.3,yAxisID:'y2',order:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      label:ctx=>ctx.dataset.yAxisID==='y2'?` 달성률: ${ctx.raw??'-'}%`:` ${ctx.dataset.label}: ${(ctx.raw||0).toLocaleString()}만원`
+    }}},
+    scales:{
+      x:{ticks:{autoSkip:false,maxRotation:0,font:{size:11},color:'#556080'},grid:{display:false}},
+      y:{ticks:{callback:fmt,font:{size:10},color:'#556080'},grid:{color:'rgba(30,50,120,.07)'}},
+      y2:{position:'right',ticks:{callback:v=>v+'%',font:{size:10},color:lc},grid:{display:false},min:0,suggestedMax:200}
+    }}});
+}
+
+// 상품별 테이블 생성
+function buildTeamTable(id, prods_data){
+  const rc2=(v,k)=>{const r=k>0?Math.round(v/k*1000)/10:0;const c=r>=100?'#0c9e6e':r>=70?'#d97706':r>0?'#dc2626':'#98a0b8';return`<td style="text-align:right;font-family:'DM Mono',monospace;font-size:12px;color:${c};">${r.toFixed(1)}%</td>`;};
+  const fmt2=v=>v>0?v.toLocaleString()+' 만':'-';
+  document.getElementById(id).innerHTML=Object.entries(prods_data).map(([prod,d])=>{
+    const kb=d.kpi_b.slice(0,6).reduce((a,b)=>a+b,0);
+    const ab=d.act_b.slice(0,6).reduce((a,b)=>a+b,0);
+    const kr=d.kpi_r.slice(0,6).reduce((a,b)=>a+b,0);
+    const ar=d.act_r.slice(0,6).reduce((a,b)=>a+b,0);
+    return`<tr>
+      <td style="font-weight:500;">${prod}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(kb)}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(ab)}</td>
+      ${rc2(ab,kb)}
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(kr)}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt2(ar)}</td>
+      ${rc2(ar,kr)}
+    </tr>`;
+  }).join('');
+}
+
+let bizChartsBuilt=false, mktChartsBuilt=false;
+function initBizCharts(){
+  if(bizChartsBuilt) return;
+  buildTeamMonth('biz','b');
+  buildTeamProdChart('bizProdBChart', BIZ.prods, 'b');
+  buildTeamProdChart('bizProdRChart', BIZ.prods, 'r');
+  buildTeamTable('bizTable', BIZ.prods);
+  bizChartsBuilt=true;
+}
+function initMktCharts(){
+  if(mktChartsBuilt) return;
+  buildTeamMonth('mkt','b');
+  buildTeamProdChart('mktProdBChart', MKT.prods, 'b');
+  buildTeamProdChart('mktProdRChart', MKT.prods, 'r');
+  buildTeamTable('mktTable', MKT.prods);
+  mktChartsBuilt=true;
+}
+
 renderAll();
 </script>
 </body>
