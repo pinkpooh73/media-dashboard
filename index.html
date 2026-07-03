@@ -129,6 +129,8 @@ td:not(:first-child){text-align:right;font-family:'DM Mono',monospace;}
   </div>
 </div>
 
+<div id="qSummaryBox" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem;"></div>
+
 <div class="sec-lbl">상반기 KPI 달성 진행 현황</div>
 <div class="prog-sec" id="progSec"></div>
 
@@ -220,6 +222,8 @@ td:not(:first-child){text-align:right;font-family:'DM Mono',monospace;}
     </div>
   </div>
 
+  <div id="bizQBox" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem;"></div>
+
   <div class="sec-lbl">월별 취급고 · 매출 KPI vs 실적</div>
   <div style="display:flex;gap:6px;margin-bottom:.8rem;">
     <button class="q-btn" id="biz-b-btn" onclick="switchBiz('b')">취급고</button>
@@ -287,6 +291,8 @@ td:not(:first-child){text-align:right;font-family:'DM Mono',monospace;}
       <div class="ks">679,930,000 / KPI 740,500,000</div>
     </div>
   </div>
+
+  <div id="mktQBox" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem;"></div>
 
   <div class="sec-lbl">월별 취급고 · 매출 KPI vs 실적</div>
   <div style="display:flex;gap:6px;margin-bottom:.8rem;">
@@ -413,6 +419,24 @@ document.getElementById('progSec').innerHTML=progRows.map(item=>{
     <span class="prog-dlt" style="color:${color};font-size:10px;">${rate>=100?'✅':''}</span>
   </div>`;
 }).join('');
+
+// ── 분기별 Summary 박스 ──
+(function(){
+  const QQ=['Q1','Q2','Q3','Q4'];
+  const colors=['#2563eb','#0c9e6e','#d97706','#dc2626'];
+  const html=QQ.map((q,i)=>{
+    const kpi=s3(TQKPI,i*3), act=s3(TQACT,i*3);
+    const rate=kpi>0?Math.round(act/kpi*1000)/10:0;
+    const color=rate>=100?'#0c9e6e':rate>=70?'#d97706':rate>0?'#dc2626':'#98a0b8';
+    const accent=colors[i];
+    return `<div class="kpi-card" style="--accent:${accent};">
+      <div class="kl">${q} 매출 달성률</div>
+      <div class="kv" style="color:${color};">${rate}%</div>
+      <div class="ks">${(act/100000000).toFixed(2)}억 / KPI ${(kpi/100000000).toFixed(2)}억</div>
+    </div>`;
+  }).join('');
+  document.getElementById('qSummaryBox').innerHTML=html;
+})();
 
 // ── 월별 차트 ──
 let monthChart=null, curSeg='b';
@@ -1048,9 +1072,25 @@ function buildTeamTable(id, prods_data){
   }).join('');
 }
 
+function buildTeamQBox(id, data){
+  const QQ=['Q1','Q2','Q3','Q4'];
+  const colors=['#2563eb','#0c9e6e','#d97706','#dc2626'];
+  document.getElementById(id).innerHTML=QQ.map((q,i)=>{
+    const kpi=s3(data.kpi_r_total,i*3), act=s3(data.act_r_total,i*3);
+    const rate=kpi>0?Math.round(act/kpi*1000)/10:0;
+    const color=rate>=100?'#0c9e6e':rate>=70?'#d97706':rate>0?'#dc2626':'#98a0b8';
+    return `<div class="kpi-card" style="--accent:${colors[i]};">
+      <div class="kl">${q} 매출 달성률</div>
+      <div class="kv" style="color:${color};">${rate}%</div>
+      <div class="ks">${act.toLocaleString()}만 / KPI ${kpi.toLocaleString()}만</div>
+    </div>`;
+  }).join('');
+}
+
 let bizChartsBuilt=false, mktChartsBuilt=false;
 function initBizCharts(){
   if(bizChartsBuilt) return;
+  buildTeamQBox('bizQBox', BIZ);
   buildTeamMonth('biz','b');
   buildTeamProdChart('bizProdBChart', BIZ.prods, 'b');
   buildTeamProdChart('bizProdRChart', BIZ.prods, 'r');
@@ -1059,6 +1099,7 @@ function initBizCharts(){
 }
 function initMktCharts(){
   if(mktChartsBuilt) return;
+  buildTeamQBox('mktQBox', MKT);
   buildTeamMonth('mkt','b');
   buildTeamProdChart('mktProdBChart', MKT.prods, 'b');
   buildTeamProdChart('mktProdRChart', MKT.prods, 'r');
