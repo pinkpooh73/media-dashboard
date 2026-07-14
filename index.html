@@ -135,6 +135,32 @@ td:not(:first-child){text-align:right;font-family:'DM Mono',monospace;}
 
 <div id="qSummaryBox" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem;"></div>
 
+
+<div class="sec-lbl" style="margin-top:0;">지난주 대비 상품별 매출 증감 현황</div>
+<div id="weeklySection" style="background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:1.25rem;margin-bottom:1.5rem;">
+
+  <!-- 증감 카드 -->
+  <div id="weeklyCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:1.25rem;"></div>
+
+  <!-- 이슈사항 입력 -->
+  <div style="border-top:.5px solid var(--bdr);padding-top:1rem;margin-top:.5rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;">
+      <span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--tm);">📌 이슈사항</span>
+      <div style="display:flex;gap:6px;">
+        <button onclick="saveIssue()" style="padding:3px 12px;font-size:11px;border-radius:7px;cursor:pointer;border:1px solid rgba(37,99,235,.4);background:rgba(37,99,235,.1);color:#2563eb;font-weight:500;">저장</button>
+        <button onclick="clearIssue()" style="padding:3px 10px;font-size:11px;border-radius:7px;cursor:pointer;border:.5px solid var(--bdr);background:transparent;color:var(--tm);">초기화</button>
+      </div>
+    </div>
+    <textarea id="issueText"
+      placeholder="이번 주 이슈사항을 입력하세요&#10;예) Stellaize 대규모 캠페인 집행으로 매출 급증&#10;     비즈링 세금계산서 발행 지연으로 실적 미반영"
+      style="width:100%;min-height:90px;padding:.7rem .9rem;font-size:12px;font-family:'Noto Sans KR',sans-serif;
+             background:var(--sur2);border:.5px solid var(--bdr);border-radius:10px;resize:vertical;
+             color:var(--tp);line-height:1.6;outline:none;"
+      oninput="autoSaveIssue(this)"></textarea>
+    <div id="issueSavedMsg" style="font-size:10px;color:var(--tm);margin-top:4px;text-align:right;display:none;">✅ 저장됨</div>
+  </div>
+</div>
+
 <div class="sec-lbl">상반기 KPI 달성 진행 현황</div>
 <div class="prog-sec" id="progSec"></div>
 
@@ -820,6 +846,102 @@ function initMktCharts(){
   mktChartsBuilt=true;
 }
 
+
+// ── 지난주 대비 증감 ──
+const PROD_WEEK={"비즈링": {"act_r": [3981, 3834, 3866, 3842, 3852, 3819, 0, 0, 0, 0, 0, 0], "kpi_r": [3600, 3600, 3825, 3825, 3900, 3900, 3975, 3975, 3975, 4050, 4050, 4050]}, "들리고": {"act_r": [100, 740, 895, 1094, 1875, 508, 529, 610, 216, 0, 0, 0], "kpi_r": [300, 600, 900, 900, 900, 900, 1200, 1500, 1500, 2250, 2250, 675]}, "옥외광고": {"act_r": [0, 127, 750, 0, 92, 1254, 0, 0, 1690, 0, 0, 0], "kpi_r": [0, 150, 525, 225, 225, 525, 225, 225, 750, 300, 300, 300]}, "문자B2G": {"act_r": [616, 202, 707, 772, 312, 374, 707, 0, 0, 0, 0, 0], "kpi_r": [600, 600, 720, 720, 720, 720, 825, 825, 825, 825, 825, 825]}, "용역": {"act_r": [1800, 13399, 8642, 9024, 8966, 8895, 1800, 1800, 1800, 1800, 1800, 1800], "kpi_r": [9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269]}, "다윈": {"act_r": [2570, 0, 1957, 1457, 1457, 410, 1545, 0, 0, 500, 500, 500], "kpi_r": [4000, 4000, 4500, 5000, 9500, 10500, 7500, 7500, 7500, 9500, 10000, 10500]}, "ASUM": {"act_r": [593, 520, 500, 340, 280, 450, 460, 0, 0, 0, 0, 0], "kpi_r": [600, 600, 600, 400, 400, 400, 400, 400, 500, 500, 500, 500]}, "비즈챗": {"act_r": [696, 420, 1079, 1521, 1402, 1586, 235, 50, 0, 0, 0, 0], "kpi_r": [780, 1040, 1170, 1430, 1430, 1300, 1690, 1690, 1560, 1690, 1820, 1950]}, "Stellaize": {"act_r": [21726, 3091, 20122, 2297, 6, 587, 2176, 0, 0, 0, 0, 0], "kpi_r": [3000, 3000, 3000, 4000, 4000, 6000, 5000, 5000, 6000, 6000, 7000, 8000]}, "RMN": {"act_r": [190, 1090, 270, 522, 562, 222, 522, 222, 222, 222, 222, 222], "kpi_r": [400, 500, 500, 600, 600, 800, 800, 800, 800, 800, 800, 800]}};
+const PROD_LIST=["비즈링", "들리고", "옥외광고", "문자B2G", "용역", "다윈", "ASUM", "비즈챗", "Stellaize", "RMN"];
+
+// localStorage에서 지난주 데이터 로드
+function getWeekKey(){ return 'weekData'; }
+function getPrevKey(){ return 'prevWeekData'; }
+
+function buildWeeklyCards(){
+  const cur={}, prev=JSON.parse(localStorage.getItem(getPrevKey())||'{}');
+  PROD_LIST.forEach(p=>{
+    const ar=PROD_WEEK[p]?.act_r||[];
+    cur[p]=ar.slice(0,7).reduce((a,b)=>a+b,0);
+  });
+  // 현재 데이터 저장
+  const stored=JSON.parse(localStorage.getItem(getWeekKey())||'{}');
+  // 이전 주 데이터가 없으면 비교 불가
+  const hasPrev=Object.keys(prev).length>0;
+
+  const cards=PROD_LIST.map(p=>{
+    const curVal=cur[p]||0;
+    const prevVal=prev[p]||0;
+    const diff=curVal-prevVal;
+    const kr=PROD_WEEK[p]?.kpi_r||[];
+    const kpi=kr.slice(0,7).reduce((a,b)=>a+b,0);
+    const rate=kpi>0?Math.round(curVal/kpi*1000)/10:0;
+    const rateColor=rate>=100?'#0c9e6e':rate>=70?'#d97706':rate>0?'#dc2626':'#98a0b8';
+
+    let diffHtml='';
+    if(hasPrev){
+      const dColor=diff>0?'#0c9e6e':diff<0?'#dc2626':'#98a0b8';
+      const dIcon=diff>0?'▲':diff<0?'▼':'─';
+      diffHtml=`<div style="font-size:10px;color:${dColor};font-weight:500;margin-top:2px;">${dIcon} ${Math.abs(diff).toLocaleString()}만</div>`;
+    } else {
+      diffHtml=`<div style="font-size:10px;color:var(--tm);margin-top:2px;">지난주 데이터 없음</div>`;
+    }
+
+    return `<div style="background:var(--sur2);border-radius:10px;padding:.7rem .9rem;border:.5px solid var(--bdr);border-top:2px solid ${rateColor};">
+      <div style="font-size:10px;color:var(--ts);margin-bottom:3px;font-weight:500;">${p}</div>
+      <div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:${rateColor};">${curVal.toLocaleString()}만</div>
+      <div style="font-size:10px;color:var(--tm);">달성률 ${rate}%</div>
+      ${diffHtml}
+    </div>`;
+  }).join('');
+  document.getElementById('weeklyCards').innerHTML=cards;
+}
+
+// 이슈사항 저장/로드
+function loadIssue(){
+  const txt=localStorage.getItem('dashboardIssue')||'';
+  document.getElementById('issueText').value=txt;
+}
+let issueTimer=null;
+function autoSaveIssue(el){
+  clearTimeout(issueTimer);
+  issueTimer=setTimeout(()=>{ localStorage.setItem('dashboardIssue',el.value); showSavedMsg(); },800);
+}
+function saveIssue(){
+  localStorage.setItem('dashboardIssue',document.getElementById('issueText').value);
+  showSavedMsg();
+}
+function clearIssue(){
+  document.getElementById('issueText').value='';
+  localStorage.removeItem('dashboardIssue');
+}
+function showSavedMsg(){
+  const msg=document.getElementById('issueSavedMsg');
+  msg.style.display='block';
+  setTimeout(()=>msg.style.display='none',2000);
+}
+
+// 업데이트 감지: 이전 저장 데이터와 현재 PROD_WEEK 비교
+(function(){
+  const stored=localStorage.getItem(getWeekKey());
+  if(stored){
+    const prev=JSON.parse(stored);
+    // 합계 비교로 데이터 변경 여부 확인
+    const prevSum=Object.values(prev).reduce((s,v)=>s+(v||0),0);
+    const curSum=PROD_LIST.reduce((s,p)=>s+(PROD_WEEK[p]?.act_r||[]).slice(0,7).reduce((a,b)=>a+b,0),0);
+    if(Math.abs(prevSum-curSum)>10){
+      // 데이터가 바뀌었으면 현재→이전으로 이동 후 새 현재 저장
+      localStorage.setItem(getPrevKey(), stored);
+    }
+  }
+  // 현재 데이터 저장
+  const curData={};
+  PROD_LIST.forEach(p=>{
+    curData[p]=(PROD_WEEK[p]?.act_r||[]).slice(0,7).reduce((a,b)=>a+b,0);
+  });
+  localStorage.setItem(getWeekKey(), JSON.stringify(curData));
+})();
+
+buildWeeklyCards();
+loadIssue();
+
 renderAll();}
 function togP(p){if(actP.has(p)){if(actP.size>1)actP.delete(p);}else actP.add(p);
 // ── 팀별 데이터 ──
@@ -929,6 +1051,102 @@ function initMktCharts(){
   mktChartsBuilt=true;
 }
 
+
+// ── 지난주 대비 증감 ──
+const PROD_WEEK={"비즈링": {"act_r": [3981, 3834, 3866, 3842, 3852, 3819, 0, 0, 0, 0, 0, 0], "kpi_r": [3600, 3600, 3825, 3825, 3900, 3900, 3975, 3975, 3975, 4050, 4050, 4050]}, "들리고": {"act_r": [100, 740, 895, 1094, 1875, 508, 529, 610, 216, 0, 0, 0], "kpi_r": [300, 600, 900, 900, 900, 900, 1200, 1500, 1500, 2250, 2250, 675]}, "옥외광고": {"act_r": [0, 127, 750, 0, 92, 1254, 0, 0, 1690, 0, 0, 0], "kpi_r": [0, 150, 525, 225, 225, 525, 225, 225, 750, 300, 300, 300]}, "문자B2G": {"act_r": [616, 202, 707, 772, 312, 374, 707, 0, 0, 0, 0, 0], "kpi_r": [600, 600, 720, 720, 720, 720, 825, 825, 825, 825, 825, 825]}, "용역": {"act_r": [1800, 13399, 8642, 9024, 8966, 8895, 1800, 1800, 1800, 1800, 1800, 1800], "kpi_r": [9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269]}, "다윈": {"act_r": [2570, 0, 1957, 1457, 1457, 410, 1545, 0, 0, 500, 500, 500], "kpi_r": [4000, 4000, 4500, 5000, 9500, 10500, 7500, 7500, 7500, 9500, 10000, 10500]}, "ASUM": {"act_r": [593, 520, 500, 340, 280, 450, 460, 0, 0, 0, 0, 0], "kpi_r": [600, 600, 600, 400, 400, 400, 400, 400, 500, 500, 500, 500]}, "비즈챗": {"act_r": [696, 420, 1079, 1521, 1402, 1586, 235, 50, 0, 0, 0, 0], "kpi_r": [780, 1040, 1170, 1430, 1430, 1300, 1690, 1690, 1560, 1690, 1820, 1950]}, "Stellaize": {"act_r": [21726, 3091, 20122, 2297, 6, 587, 2176, 0, 0, 0, 0, 0], "kpi_r": [3000, 3000, 3000, 4000, 4000, 6000, 5000, 5000, 6000, 6000, 7000, 8000]}, "RMN": {"act_r": [190, 1090, 270, 522, 562, 222, 522, 222, 222, 222, 222, 222], "kpi_r": [400, 500, 500, 600, 600, 800, 800, 800, 800, 800, 800, 800]}};
+const PROD_LIST=["비즈링", "들리고", "옥외광고", "문자B2G", "용역", "다윈", "ASUM", "비즈챗", "Stellaize", "RMN"];
+
+// localStorage에서 지난주 데이터 로드
+function getWeekKey(){ return 'weekData'; }
+function getPrevKey(){ return 'prevWeekData'; }
+
+function buildWeeklyCards(){
+  const cur={}, prev=JSON.parse(localStorage.getItem(getPrevKey())||'{}');
+  PROD_LIST.forEach(p=>{
+    const ar=PROD_WEEK[p]?.act_r||[];
+    cur[p]=ar.slice(0,7).reduce((a,b)=>a+b,0);
+  });
+  // 현재 데이터 저장
+  const stored=JSON.parse(localStorage.getItem(getWeekKey())||'{}');
+  // 이전 주 데이터가 없으면 비교 불가
+  const hasPrev=Object.keys(prev).length>0;
+
+  const cards=PROD_LIST.map(p=>{
+    const curVal=cur[p]||0;
+    const prevVal=prev[p]||0;
+    const diff=curVal-prevVal;
+    const kr=PROD_WEEK[p]?.kpi_r||[];
+    const kpi=kr.slice(0,7).reduce((a,b)=>a+b,0);
+    const rate=kpi>0?Math.round(curVal/kpi*1000)/10:0;
+    const rateColor=rate>=100?'#0c9e6e':rate>=70?'#d97706':rate>0?'#dc2626':'#98a0b8';
+
+    let diffHtml='';
+    if(hasPrev){
+      const dColor=diff>0?'#0c9e6e':diff<0?'#dc2626':'#98a0b8';
+      const dIcon=diff>0?'▲':diff<0?'▼':'─';
+      diffHtml=`<div style="font-size:10px;color:${dColor};font-weight:500;margin-top:2px;">${dIcon} ${Math.abs(diff).toLocaleString()}만</div>`;
+    } else {
+      diffHtml=`<div style="font-size:10px;color:var(--tm);margin-top:2px;">지난주 데이터 없음</div>`;
+    }
+
+    return `<div style="background:var(--sur2);border-radius:10px;padding:.7rem .9rem;border:.5px solid var(--bdr);border-top:2px solid ${rateColor};">
+      <div style="font-size:10px;color:var(--ts);margin-bottom:3px;font-weight:500;">${p}</div>
+      <div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:${rateColor};">${curVal.toLocaleString()}만</div>
+      <div style="font-size:10px;color:var(--tm);">달성률 ${rate}%</div>
+      ${diffHtml}
+    </div>`;
+  }).join('');
+  document.getElementById('weeklyCards').innerHTML=cards;
+}
+
+// 이슈사항 저장/로드
+function loadIssue(){
+  const txt=localStorage.getItem('dashboardIssue')||'';
+  document.getElementById('issueText').value=txt;
+}
+let issueTimer=null;
+function autoSaveIssue(el){
+  clearTimeout(issueTimer);
+  issueTimer=setTimeout(()=>{ localStorage.setItem('dashboardIssue',el.value); showSavedMsg(); },800);
+}
+function saveIssue(){
+  localStorage.setItem('dashboardIssue',document.getElementById('issueText').value);
+  showSavedMsg();
+}
+function clearIssue(){
+  document.getElementById('issueText').value='';
+  localStorage.removeItem('dashboardIssue');
+}
+function showSavedMsg(){
+  const msg=document.getElementById('issueSavedMsg');
+  msg.style.display='block';
+  setTimeout(()=>msg.style.display='none',2000);
+}
+
+// 업데이트 감지: 이전 저장 데이터와 현재 PROD_WEEK 비교
+(function(){
+  const stored=localStorage.getItem(getWeekKey());
+  if(stored){
+    const prev=JSON.parse(stored);
+    // 합계 비교로 데이터 변경 여부 확인
+    const prevSum=Object.values(prev).reduce((s,v)=>s+(v||0),0);
+    const curSum=PROD_LIST.reduce((s,p)=>s+(PROD_WEEK[p]?.act_r||[]).slice(0,7).reduce((a,b)=>a+b,0),0);
+    if(Math.abs(prevSum-curSum)>10){
+      // 데이터가 바뀌었으면 현재→이전으로 이동 후 새 현재 저장
+      localStorage.setItem(getPrevKey(), stored);
+    }
+  }
+  // 현재 데이터 저장
+  const curData={};
+  PROD_LIST.forEach(p=>{
+    curData[p]=(PROD_WEEK[p]?.act_r||[]).slice(0,7).reduce((a,b)=>a+b,0);
+  });
+  localStorage.setItem(getWeekKey(), JSON.stringify(curData));
+})();
+
+buildWeeklyCards();
+loadIssue();
+
 renderAll();}
 function togAll(){const prods=getP(curM);if(prods.every(p=>actP.has(p)))actP=new Set([prods[0]]);else prods.forEach(p=>actP.add(p));
 // ── 팀별 데이터 ──
@@ -1037,6 +1255,102 @@ function initMktCharts(){
   buildTeamTable('mktTable', MKT.prods);
   mktChartsBuilt=true;
 }
+
+
+// ── 지난주 대비 증감 ──
+const PROD_WEEK={"비즈링": {"act_r": [3981, 3834, 3866, 3842, 3852, 3819, 0, 0, 0, 0, 0, 0], "kpi_r": [3600, 3600, 3825, 3825, 3900, 3900, 3975, 3975, 3975, 4050, 4050, 4050]}, "들리고": {"act_r": [100, 740, 895, 1094, 1875, 508, 529, 610, 216, 0, 0, 0], "kpi_r": [300, 600, 900, 900, 900, 900, 1200, 1500, 1500, 2250, 2250, 675]}, "옥외광고": {"act_r": [0, 127, 750, 0, 92, 1254, 0, 0, 1690, 0, 0, 0], "kpi_r": [0, 150, 525, 225, 225, 525, 225, 225, 750, 300, 300, 300]}, "문자B2G": {"act_r": [616, 202, 707, 772, 312, 374, 707, 0, 0, 0, 0, 0], "kpi_r": [600, 600, 720, 720, 720, 720, 825, 825, 825, 825, 825, 825]}, "용역": {"act_r": [1800, 13399, 8642, 9024, 8966, 8895, 1800, 1800, 1800, 1800, 1800, 1800], "kpi_r": [9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269]}, "다윈": {"act_r": [2570, 0, 1957, 1457, 1457, 410, 1545, 0, 0, 500, 500, 500], "kpi_r": [4000, 4000, 4500, 5000, 9500, 10500, 7500, 7500, 7500, 9500, 10000, 10500]}, "ASUM": {"act_r": [593, 520, 500, 340, 280, 450, 460, 0, 0, 0, 0, 0], "kpi_r": [600, 600, 600, 400, 400, 400, 400, 400, 500, 500, 500, 500]}, "비즈챗": {"act_r": [696, 420, 1079, 1521, 1402, 1586, 235, 50, 0, 0, 0, 0], "kpi_r": [780, 1040, 1170, 1430, 1430, 1300, 1690, 1690, 1560, 1690, 1820, 1950]}, "Stellaize": {"act_r": [21726, 3091, 20122, 2297, 6, 587, 2176, 0, 0, 0, 0, 0], "kpi_r": [3000, 3000, 3000, 4000, 4000, 6000, 5000, 5000, 6000, 6000, 7000, 8000]}, "RMN": {"act_r": [190, 1090, 270, 522, 562, 222, 522, 222, 222, 222, 222, 222], "kpi_r": [400, 500, 500, 600, 600, 800, 800, 800, 800, 800, 800, 800]}};
+const PROD_LIST=["비즈링", "들리고", "옥외광고", "문자B2G", "용역", "다윈", "ASUM", "비즈챗", "Stellaize", "RMN"];
+
+// localStorage에서 지난주 데이터 로드
+function getWeekKey(){ return 'weekData'; }
+function getPrevKey(){ return 'prevWeekData'; }
+
+function buildWeeklyCards(){
+  const cur={}, prev=JSON.parse(localStorage.getItem(getPrevKey())||'{}');
+  PROD_LIST.forEach(p=>{
+    const ar=PROD_WEEK[p]?.act_r||[];
+    cur[p]=ar.slice(0,7).reduce((a,b)=>a+b,0);
+  });
+  // 현재 데이터 저장
+  const stored=JSON.parse(localStorage.getItem(getWeekKey())||'{}');
+  // 이전 주 데이터가 없으면 비교 불가
+  const hasPrev=Object.keys(prev).length>0;
+
+  const cards=PROD_LIST.map(p=>{
+    const curVal=cur[p]||0;
+    const prevVal=prev[p]||0;
+    const diff=curVal-prevVal;
+    const kr=PROD_WEEK[p]?.kpi_r||[];
+    const kpi=kr.slice(0,7).reduce((a,b)=>a+b,0);
+    const rate=kpi>0?Math.round(curVal/kpi*1000)/10:0;
+    const rateColor=rate>=100?'#0c9e6e':rate>=70?'#d97706':rate>0?'#dc2626':'#98a0b8';
+
+    let diffHtml='';
+    if(hasPrev){
+      const dColor=diff>0?'#0c9e6e':diff<0?'#dc2626':'#98a0b8';
+      const dIcon=diff>0?'▲':diff<0?'▼':'─';
+      diffHtml=`<div style="font-size:10px;color:${dColor};font-weight:500;margin-top:2px;">${dIcon} ${Math.abs(diff).toLocaleString()}만</div>`;
+    } else {
+      diffHtml=`<div style="font-size:10px;color:var(--tm);margin-top:2px;">지난주 데이터 없음</div>`;
+    }
+
+    return `<div style="background:var(--sur2);border-radius:10px;padding:.7rem .9rem;border:.5px solid var(--bdr);border-top:2px solid ${rateColor};">
+      <div style="font-size:10px;color:var(--ts);margin-bottom:3px;font-weight:500;">${p}</div>
+      <div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:${rateColor};">${curVal.toLocaleString()}만</div>
+      <div style="font-size:10px;color:var(--tm);">달성률 ${rate}%</div>
+      ${diffHtml}
+    </div>`;
+  }).join('');
+  document.getElementById('weeklyCards').innerHTML=cards;
+}
+
+// 이슈사항 저장/로드
+function loadIssue(){
+  const txt=localStorage.getItem('dashboardIssue')||'';
+  document.getElementById('issueText').value=txt;
+}
+let issueTimer=null;
+function autoSaveIssue(el){
+  clearTimeout(issueTimer);
+  issueTimer=setTimeout(()=>{ localStorage.setItem('dashboardIssue',el.value); showSavedMsg(); },800);
+}
+function saveIssue(){
+  localStorage.setItem('dashboardIssue',document.getElementById('issueText').value);
+  showSavedMsg();
+}
+function clearIssue(){
+  document.getElementById('issueText').value='';
+  localStorage.removeItem('dashboardIssue');
+}
+function showSavedMsg(){
+  const msg=document.getElementById('issueSavedMsg');
+  msg.style.display='block';
+  setTimeout(()=>msg.style.display='none',2000);
+}
+
+// 업데이트 감지: 이전 저장 데이터와 현재 PROD_WEEK 비교
+(function(){
+  const stored=localStorage.getItem(getWeekKey());
+  if(stored){
+    const prev=JSON.parse(stored);
+    // 합계 비교로 데이터 변경 여부 확인
+    const prevSum=Object.values(prev).reduce((s,v)=>s+(v||0),0);
+    const curSum=PROD_LIST.reduce((s,p)=>s+(PROD_WEEK[p]?.act_r||[]).slice(0,7).reduce((a,b)=>a+b,0),0);
+    if(Math.abs(prevSum-curSum)>10){
+      // 데이터가 바뀌었으면 현재→이전으로 이동 후 새 현재 저장
+      localStorage.setItem(getPrevKey(), stored);
+    }
+  }
+  // 현재 데이터 저장
+  const curData={};
+  PROD_LIST.forEach(p=>{
+    curData[p]=(PROD_WEEK[p]?.act_r||[]).slice(0,7).reduce((a,b)=>a+b,0);
+  });
+  localStorage.setItem(getWeekKey(), JSON.stringify(curData));
+})();
+
+buildWeeklyCards();
+loadIssue();
 
 renderAll();}
 function renderAll(){renderMT();renderPT();renderCS();renderCC();}
@@ -1292,6 +1606,102 @@ function initMktCharts(){
   buildProdMonthChart('mkt', curMktProd);
   mktChartsBuilt=true;
 }
+
+
+// ── 지난주 대비 증감 ──
+const PROD_WEEK={"비즈링": {"act_r": [3981, 3834, 3866, 3842, 3852, 3819, 0, 0, 0, 0, 0, 0], "kpi_r": [3600, 3600, 3825, 3825, 3900, 3900, 3975, 3975, 3975, 4050, 4050, 4050]}, "들리고": {"act_r": [100, 740, 895, 1094, 1875, 508, 529, 610, 216, 0, 0, 0], "kpi_r": [300, 600, 900, 900, 900, 900, 1200, 1500, 1500, 2250, 2250, 675]}, "옥외광고": {"act_r": [0, 127, 750, 0, 92, 1254, 0, 0, 1690, 0, 0, 0], "kpi_r": [0, 150, 525, 225, 225, 525, 225, 225, 750, 300, 300, 300]}, "문자B2G": {"act_r": [616, 202, 707, 772, 312, 374, 707, 0, 0, 0, 0, 0], "kpi_r": [600, 600, 720, 720, 720, 720, 825, 825, 825, 825, 825, 825]}, "용역": {"act_r": [1800, 13399, 8642, 9024, 8966, 8895, 1800, 1800, 1800, 1800, 1800, 1800], "kpi_r": [9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269, 9269]}, "다윈": {"act_r": [2570, 0, 1957, 1457, 1457, 410, 1545, 0, 0, 500, 500, 500], "kpi_r": [4000, 4000, 4500, 5000, 9500, 10500, 7500, 7500, 7500, 9500, 10000, 10500]}, "ASUM": {"act_r": [593, 520, 500, 340, 280, 450, 460, 0, 0, 0, 0, 0], "kpi_r": [600, 600, 600, 400, 400, 400, 400, 400, 500, 500, 500, 500]}, "비즈챗": {"act_r": [696, 420, 1079, 1521, 1402, 1586, 235, 50, 0, 0, 0, 0], "kpi_r": [780, 1040, 1170, 1430, 1430, 1300, 1690, 1690, 1560, 1690, 1820, 1950]}, "Stellaize": {"act_r": [21726, 3091, 20122, 2297, 6, 587, 2176, 0, 0, 0, 0, 0], "kpi_r": [3000, 3000, 3000, 4000, 4000, 6000, 5000, 5000, 6000, 6000, 7000, 8000]}, "RMN": {"act_r": [190, 1090, 270, 522, 562, 222, 522, 222, 222, 222, 222, 222], "kpi_r": [400, 500, 500, 600, 600, 800, 800, 800, 800, 800, 800, 800]}};
+const PROD_LIST=["비즈링", "들리고", "옥외광고", "문자B2G", "용역", "다윈", "ASUM", "비즈챗", "Stellaize", "RMN"];
+
+// localStorage에서 지난주 데이터 로드
+function getWeekKey(){ return 'weekData'; }
+function getPrevKey(){ return 'prevWeekData'; }
+
+function buildWeeklyCards(){
+  const cur={}, prev=JSON.parse(localStorage.getItem(getPrevKey())||'{}');
+  PROD_LIST.forEach(p=>{
+    const ar=PROD_WEEK[p]?.act_r||[];
+    cur[p]=ar.slice(0,7).reduce((a,b)=>a+b,0);
+  });
+  // 현재 데이터 저장
+  const stored=JSON.parse(localStorage.getItem(getWeekKey())||'{}');
+  // 이전 주 데이터가 없으면 비교 불가
+  const hasPrev=Object.keys(prev).length>0;
+
+  const cards=PROD_LIST.map(p=>{
+    const curVal=cur[p]||0;
+    const prevVal=prev[p]||0;
+    const diff=curVal-prevVal;
+    const kr=PROD_WEEK[p]?.kpi_r||[];
+    const kpi=kr.slice(0,7).reduce((a,b)=>a+b,0);
+    const rate=kpi>0?Math.round(curVal/kpi*1000)/10:0;
+    const rateColor=rate>=100?'#0c9e6e':rate>=70?'#d97706':rate>0?'#dc2626':'#98a0b8';
+
+    let diffHtml='';
+    if(hasPrev){
+      const dColor=diff>0?'#0c9e6e':diff<0?'#dc2626':'#98a0b8';
+      const dIcon=diff>0?'▲':diff<0?'▼':'─';
+      diffHtml=`<div style="font-size:10px;color:${dColor};font-weight:500;margin-top:2px;">${dIcon} ${Math.abs(diff).toLocaleString()}만</div>`;
+    } else {
+      diffHtml=`<div style="font-size:10px;color:var(--tm);margin-top:2px;">지난주 데이터 없음</div>`;
+    }
+
+    return `<div style="background:var(--sur2);border-radius:10px;padding:.7rem .9rem;border:.5px solid var(--bdr);border-top:2px solid ${rateColor};">
+      <div style="font-size:10px;color:var(--ts);margin-bottom:3px;font-weight:500;">${p}</div>
+      <div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:${rateColor};">${curVal.toLocaleString()}만</div>
+      <div style="font-size:10px;color:var(--tm);">달성률 ${rate}%</div>
+      ${diffHtml}
+    </div>`;
+  }).join('');
+  document.getElementById('weeklyCards').innerHTML=cards;
+}
+
+// 이슈사항 저장/로드
+function loadIssue(){
+  const txt=localStorage.getItem('dashboardIssue')||'';
+  document.getElementById('issueText').value=txt;
+}
+let issueTimer=null;
+function autoSaveIssue(el){
+  clearTimeout(issueTimer);
+  issueTimer=setTimeout(()=>{ localStorage.setItem('dashboardIssue',el.value); showSavedMsg(); },800);
+}
+function saveIssue(){
+  localStorage.setItem('dashboardIssue',document.getElementById('issueText').value);
+  showSavedMsg();
+}
+function clearIssue(){
+  document.getElementById('issueText').value='';
+  localStorage.removeItem('dashboardIssue');
+}
+function showSavedMsg(){
+  const msg=document.getElementById('issueSavedMsg');
+  msg.style.display='block';
+  setTimeout(()=>msg.style.display='none',2000);
+}
+
+// 업데이트 감지: 이전 저장 데이터와 현재 PROD_WEEK 비교
+(function(){
+  const stored=localStorage.getItem(getWeekKey());
+  if(stored){
+    const prev=JSON.parse(stored);
+    // 합계 비교로 데이터 변경 여부 확인
+    const prevSum=Object.values(prev).reduce((s,v)=>s+(v||0),0);
+    const curSum=PROD_LIST.reduce((s,p)=>s+(PROD_WEEK[p]?.act_r||[]).slice(0,7).reduce((a,b)=>a+b,0),0);
+    if(Math.abs(prevSum-curSum)>10){
+      // 데이터가 바뀌었으면 현재→이전으로 이동 후 새 현재 저장
+      localStorage.setItem(getPrevKey(), stored);
+    }
+  }
+  // 현재 데이터 저장
+  const curData={};
+  PROD_LIST.forEach(p=>{
+    curData[p]=(PROD_WEEK[p]?.act_r||[]).slice(0,7).reduce((a,b)=>a+b,0);
+  });
+  localStorage.setItem(getWeekKey(), JSON.stringify(curData));
+})();
+
+buildWeeklyCards();
+loadIssue();
 
 renderAll();
 </script>
