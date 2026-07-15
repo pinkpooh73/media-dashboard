@@ -85,7 +85,9 @@ td:not(:first-child){text-align:right;font-family:"DM Mono",monospace;font-size:
 <div id="pg-kpi" class="page active">
   <div class="g4" id="kpi-cards"></div>
   <div class="g4" id="kpi-qbox"></div>
-  <div class="sec">상반기 KPI 달성 진행현황</div>
+  <div class="sec">전주 vs 이번주 달성률 비교</div>
+  <div id="week-compare"></div>
+  <div class="sec">'26년 전체 KPI 달성 진행현황</div>
   <div class="box" id="prog-box"></div>
   <div style="display:flex;gap:6px;margin:.75rem 0 .4rem;">
     <button class="qb" id="btn-b" onclick="switchKPI('b')">취급고</button>
@@ -276,17 +278,90 @@ function buildQBox(){
   }).join('');
 }
 
+
+const WEEK={"this_mon": "2026-07-13", "last_mon": "2026-07-06", "this_label": "7/13~7/15", "last_label": "7/6~7/12", "tw_tot": 0, "lw_tot": 241, "diff_tot": -241, "diff_pct": -100.0, "tw_n": 0, "lw_n": 5, "tw_bill": 38.2, "lw_bill": 89.8, "tw_rev": 25.9, "lw_rev": 52.9, "prods": [{"name": "Stellaize", "tw": 0, "lw": 111, "diff": -111, "pct": -100.0}, {"name": "기타", "tw": 0, "lw": 30, "diff": -30, "pct": -100.0}, {"name": "문자&B2G", "tw": 0, "lw": 50, "diff": -50, "pct": -100.0}, {"name": "비즈챗", "tw": 0, "lw": 50, "diff": -50, "pct": -100.0}]};
+
+function buildWeekCompare(){
+  var W=WEEK;
+  var b_up=W.tw_bill>=W.lw_bill, r_up=W.tw_rev>=W.lw_rev;
+  var b_diff=Math.round((W.tw_bill-W.lw_bill)*10)/10;
+  var r_diff=Math.round((W.tw_rev-W.lw_rev)*10)/10;
+  var html='';
+
+  // 달성률 비교 카드 (2개)
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.75rem;">';
+  html+='<div class="card" style="--ac:'+(b_up?'#0c9e6e':'#dc2626')+';">';
+  html+='<div class="kl">취급고 달성률 비교 (6월→7월)</div>';
+  html+='<div style="display:flex;align-items:baseline;gap:8px;margin:.25rem 0;">';
+  html+='<span style="font-size:1.25rem;font-weight:700;font-family:DM Mono,monospace;color:'+(b_up?'#0c9e6e':'#dc2626')+';">'+W.tw_bill+'%</span>';
+  html+='<span style="font-size:11px;font-family:DM Mono,monospace;color:'+(b_up?'#0c9e6e':'#dc2626')+';">'+(b_diff>=0?'▲':'▼')+Math.abs(b_diff)+'%p</span>';
+  html+='</div>';
+  html+='<div style="font-size:10px;color:var(--tm);font-family:DM Mono,monospace;">전주(6월) '+W.lw_bill+'% → 이번주(7월) '+W.tw_bill+'%</div>';
+  html+='</div>';
+
+  html+='<div class="card" style="--ac:'+(r_up?'#0c9e6e':'#dc2626')+';">';
+  html+='<div class="kl">매출 달성률 비교 (6월→7월)</div>';
+  html+='<div style="display:flex;align-items:baseline;gap:8px;margin:.25rem 0;">';
+  html+='<span style="font-size:1.25rem;font-weight:700;font-family:DM Mono,monospace;color:'+(r_up?'#0c9e6e':'#dc2626')+';">'+W.tw_rev+'%</span>';
+  html+='<span style="font-size:11px;font-family:DM Mono,monospace;color:'+(r_up?'#0c9e6e':'#dc2626')+';">'+(r_diff>=0?'▲':'▼')+Math.abs(r_diff)+'%p</span>';
+  html+='</div>';
+  html+='<div style="font-size:10px;color:var(--tm);font-family:DM Mono,monospace;">전주(6월) '+W.lw_rev+'% → 이번주(7월) '+W.tw_rev+'%</div>';
+  html+='</div>';
+  html+='</div>';
+
+  // 상품별 매출 변동 (확정건 기준)
+  html+='<div class="box">';
+  html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;">';
+  html+='<p style="font-size:12px;color:var(--ts);font-weight:500;">상품별 매출 변동현황 (확정건 순매출)</p>';
+  html+='<span style="font-size:10px;color:var(--tm);font-family:DM Mono,monospace;">전주 '+W.last_label+' → 이번주 '+W.this_label+'</span>';
+  html+='</div>';
+
+  if(!W.prods||W.prods.length===0){
+    html+='<div style="text-align:center;padding:1rem;color:var(--tm);font-size:12px;">이번주·전주 확정건 없음</div>';
+  } else {
+    html+='<div style="overflow-x:auto;">';
+    html+='<table style="width:100%;border-collapse:collapse;font-size:12px;">';
+    html+='<thead><tr style="background:var(--sur2);">';
+    html+='<th style="padding:.45rem .75rem;font-size:11px;font-weight:500;color:var(--ts);text-align:left;border-bottom:1px solid var(--bdr);">상품</th>';
+    html+='<th style="padding:.45rem .75rem;font-size:11px;font-weight:500;color:var(--ts);text-align:right;border-bottom:1px solid var(--bdr);">전주</th>';
+    html+='<th style="padding:.45rem .75rem;font-size:11px;font-weight:500;color:var(--ts);text-align:right;border-bottom:1px solid var(--bdr);">이번주</th>';
+    html+='<th style="padding:.45rem .75rem;font-size:11px;font-weight:500;color:var(--ts);text-align:right;border-bottom:1px solid var(--bdr);">변동</th>';
+    html+='<th style="padding:.45rem .75rem;font-size:11px;font-weight:500;color:var(--ts);text-align:left;border-bottom:1px solid var(--bdr);width:35%;">추이</th>';
+    html+='</tr></thead><tbody>';
+
+    W.prods.forEach(function(p){
+      var up=p.diff>=0;
+      var dc=up?'#0c9e6e':'#dc2626';
+      var maxv=Math.max(p.tw,p.lw,1);
+      var lw_w=Math.round(p.lw/maxv*100), tw_w=Math.round(p.tw/maxv*100);
+      html+='<tr style="border-bottom:.5px solid var(--bdr);">';
+      html+='<td style="padding:.45rem .75rem;font-weight:500;">'+p.name+'</td>';
+      html+='<td style="padding:.45rem .75rem;text-align:right;font-family:DM Mono,monospace;">'+p.lw.toLocaleString()+'만</td>';
+      html+='<td style="padding:.45rem .75rem;text-align:right;font-family:DM Mono,monospace;color:'+dc+';">'+p.tw.toLocaleString()+'만</td>';
+      html+='<td style="padding:.45rem .75rem;text-align:right;font-family:DM Mono,monospace;color:'+dc+';">'+(up?'▲':'▼')+Math.abs(p.diff).toLocaleString()+'만</td>';
+      html+='<td style="padding:.45rem .75rem;">';
+      html+='<div style="display:flex;flex-direction:column;gap:3px;">';
+      html+='<div style="display:flex;align-items:center;gap:4px;"><span style="font-size:9px;color:var(--tm);width:24px;">전주</span><div style="flex:1;height:5px;background:rgba(30,50,120,.1);border-radius:99px;overflow:hidden;"><div style="height:100%;width:'+lw_w+'%;background:#98a0b8;border-radius:99px;"></div></div></div>';
+      html+='<div style="display:flex;align-items:center;gap:4px;"><span style="font-size:9px;color:var(--tm);width:24px;">이번</span><div style="flex:1;height:5px;background:rgba(30,50,120,.1);border-radius:99px;overflow:hidden;"><div style="height:100%;width:'+tw_w+'%;background:'+dc+';border-radius:99px;"></div></div></div>';
+      html+='</div></td>';
+      html+='</tr>';
+    });
+    html+='</tbody></table></div>';
+  }
+  html+='</div>';
+  document.getElementById('week-compare').innerHTML=html;
+}
 function buildProg(){
   var items=[
-    {l:'전체 취급고',ab:TACTB.slice(0,6).reduce(function(a,b){return a+b;},0),kb:TKPIB.slice(0,6).reduce(function(a,b){return a+b;},0)},
-    {l:'전체 매출',ab:TACTR.slice(0,6).reduce(function(a,b){return a+b;},0),kb:TKPIR.slice(0,6).reduce(function(a,b){return a+b;},0)}
+    {l:'전체 취급고',ab:TACTB.reduce(function(a,b){return a+b;},0),kb:TKPIB.reduce(function(a,b){return a+b;},0)},
+    {l:'전체 매출',ab:TACTR.reduce(function(a,b){return a+b;},0),kb:TKPIR.reduce(function(a,b){return a+b;},0)}
   ];
   Object.keys(PRODS).forEach(function(p){
     var pd=PRODS[p];
     if(p==='Stellaize'){ items.push({l:p+' 취급고',fixed:STELLA}); return; }
-    var kb=pd.kpi_b.slice(0,6).reduce(function(a,b){return a+b;},0);
+    var kb=pd.kpi_b.reduce(function(a,b){return a+b;},0);
     if(!kb) return;
-    var ab=pd.act_b.slice(0,6).reduce(function(a,b){return a+b;},0);
+    var ab=pd.act_b.reduce(function(a,b){return a+b;},0);
     items.push({l:p+' 취급고',ab:ab,kb:kb});
   });
   document.getElementById('prog-box').innerHTML=items.map(function(it){
@@ -607,6 +682,7 @@ function buildRaw(){
 window.agDone=false; window.bizDone=false; window.mktDone=false; window.rawDone=false;
 buildKPICards();
 buildQBox();
+buildWeekCompare();
 buildProg();
 buildMonthChart();
 buildQTotal();
